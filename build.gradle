@@ -1,0 +1,65 @@
+buildscript {
+    ext.objectboxVersion = '2.1.0'
+    repositories {
+        jcenter()
+        maven { url "https://plugins.gradle.org/m2/" }
+    }
+    dependencies {
+        classpath "net.ltgt.gradle:gradle-apt-plugin:0.15"
+        classpath "io.objectbox:objectbox-gradle-plugin:$objectboxVersion"
+    }
+}
+
+plugins {
+    id 'java'
+    id 'org.jetbrains.kotlin.jvm' version '1.2.61'
+}
+apply plugin: 'net.ltgt.apt-idea' // annotation processor plugin
+apply plugin: 'io.objectbox'
+apply plugin: 'kotlin'
+
+
+group 'com.longforus'
+version '1.0-SNAPSHOT'
+
+
+repositories {
+    jcenter()
+    mavenCentral()
+}
+
+
+dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    // Optional: include all native libraries for distribution
+    implementation "io.objectbox:objectbox-kotlin:$objectboxVersion"
+    implementation "io.objectbox:objectbox-linux:$objectboxVersion"
+    implementation "io.objectbox:objectbox-macos:$objectboxVersion"
+    implementation "io.objectbox:objectbox-windows:$objectboxVersion"
+//    compile 'org.hamcrest:hamcrest-core:1.3'
+    implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'org.apache.commons:commons-lang3:3.8'
+    implementation 'io.reactivex.rxjava2:rxkotlin:2.3.0'
+    implementation 'com.squareup.okhttp3:okhttp:3.11.0'
+    implementation 'com.jgoodies:jgoodies-forms:1.9.0'
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+compileTestKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+
+
+sourceCompatibility = 1.8
+
+
+// enable debug output for plugin
+objectbox {
+    debug true
+}
+// enable debug output for annotation processor
+tasks.withType(JavaCompile) {
+    options.compilerArgs += [ "-Aobjectbox.debug=true" ]
+}
