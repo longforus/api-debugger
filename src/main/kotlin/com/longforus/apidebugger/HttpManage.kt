@@ -97,12 +97,12 @@ object HttpManage {
 
 
 
-     var SERVER_IP: String = ""
+
 
     /**
      * 根据相对路径获取全路径
      *
      * @param relativeUrl 相对路径
      */
-    private fun getAbsoluteUrl(relativeUrl: String) = SERVER_IP + relativeUrl
+    private fun getAbsoluteUrl(relativeUrl: String) = MyValueHandler.curBaseUrl + relativeUrl
 }

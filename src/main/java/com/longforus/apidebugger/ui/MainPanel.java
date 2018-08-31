@@ -38,6 +38,8 @@ public class MainPanel extends JFrame {
     private JButton mBtnNewApi;
     private JLabel lbStatus;
     private JPanel baseP;
+    private JButton btnDelUrl;
+    private JButton btnDelApi;
 
     public JTable getTbParame() {
         return mTbParame;
@@ -78,8 +80,10 @@ public class MainPanel extends JFrame {
         setContentPane(baseP);
         setJMenuBar(UILifecycleHandler.INSTANCE.getMenuBar());
         mTbParame.setModel(new DefaultTableModel(new Object[] { "key", "value" }, 15));
-        mBtnSaveBaseUrl.addActionListener(e -> UIActionHandler.INSTANCE.onSaveBaseUrl());
-        mBtnSaveApi.addActionListener(e -> UIActionHandler.INSTANCE.onSaveApi());
+        mBtnSaveBaseUrl.addActionListener(e -> UIActionHandler.INSTANCE.onSaveBaseUrl(mCbBaseUrl.getModel().getSelectedItem()));
+        btnDelUrl.addActionListener(e -> UIActionHandler.INSTANCE.onDelBaseUrl(mCbBaseUrl.getModel().getSelectedItem()));
+        btnDelApi.addActionListener(e -> UIActionHandler.INSTANCE.onDelApiUrl(mCbApiUrl.getModel().getSelectedItem()));
+        mBtnSaveApi.addActionListener(e -> UIActionHandler.INSTANCE.onSaveApi(mCbApiUrl.getModel().getSelectedItem()));
         mBtnNewApi.addActionListener(e -> UIActionHandler.INSTANCE.onNewApi());
         mBtnSend.addActionListener(e -> UIActionHandler.INSTANCE.onSend());
         pack();
@@ -105,8 +109,8 @@ public class MainPanel extends JFrame {
         createUIComponents();
         baseP = new JPanel();
         baseP.setLayout(new FormLayout(
-            "fill:d:noGrow,left:4dlu:noGrow,fill:300px:noGrow,left:4dlu:noGrow,fill:d:noGrow,left:4dlu:noGrow,fill:d:noGrow,left:4dlu:noGrow,fill:d:noGrow,left:4dlu:noGrow," +
-                "fill:max(p;600px):grow",
+            "fill:d:noGrow,left:4dlu:noGrow,fill:300px:noGrow,left:4dlu:noGrow,fill:d:noGrow,left:4dlu:noGrow,fill:max(d;4px):noGrow,left:4dlu:noGrow,fill:d:noGrow," +
+                "left:4dlu:noGrow,fill:d:noGrow,left:4dlu:noGrow,fill:max(p;600px):grow",
             "center:d:noGrow,center:max(d;4px):noGrow,top:4dlu:noGrow,center:max(d;4px):noGrow,top:4dlu:noGrow,center:200px:noGrow,top:4dlu:noGrow,center:max(p;600px):grow," +
                 "center:max(d;4px):noGrow"));
         baseP.setName("Api debugger");
@@ -131,38 +135,44 @@ public class MainPanel extends JFrame {
         mBtnSend.setText("Send");
         baseP.add(mBtnSend, cc.xy(5, 4));
         final JScrollPane scrollPane1 = new JScrollPane();
-        baseP.add(scrollPane1, cc.xyw(1, 6, 9, CellConstraints.FILL, CellConstraints.FILL));
+        baseP.add(scrollPane1, cc.xyw(1, 6, 11, CellConstraints.FILL, CellConstraints.FILL));
         scrollPane1.setBorder(BorderFactory.createTitledBorder("Request Parameter"));
         mTbParame = new JTable();
         mTbParame.setRowHeight(25);
         scrollPane1.setViewportView(mTbParame);
         final JScrollPane scrollPane2 = new JScrollPane();
-        baseP.add(scrollPane2, cc.xyw(1, 8, 9, CellConstraints.FILL, CellConstraints.FILL));
+        baseP.add(scrollPane2, cc.xyw(1, 8, 11, CellConstraints.FILL, CellConstraints.FILL));
         scrollPane2.setBorder(BorderFactory.createTitledBorder("Response"));
         mTpResponse = new JTextPane();
         mTpResponse.setPreferredSize(new Dimension(500, 600));
         scrollPane2.setViewportView(mTpResponse);
         lbStatus = new JLabel();
         lbStatus.setText("Status:");
-        baseP.add(lbStatus, cc.xyw(1, 9, 9));
+        baseP.add(lbStatus, cc.xyw(1, 9, 11));
         final JScrollPane scrollPane3 = new JScrollPane();
-        baseP.add(scrollPane3, cc.xywh(11, 1, 1, 5, CellConstraints.FILL, CellConstraints.FILL));
+        baseP.add(scrollPane3, cc.xywh(13, 1, 1, 6, CellConstraints.FILL, CellConstraints.FILL));
         scrollPane3.setBorder(BorderFactory.createTitledBorder("Request Information"));
         mTpInfo = new JTextPane();
         scrollPane3.setViewportView(mTpInfo);
-        baseP.add(mJep, cc.xywh(11, 6, 1, 3));
+        baseP.add(mJep, cc.xywh(13, 7, 1, 2));
         mJep.setBorder(BorderFactory.createTitledBorder("Json Tree"));
+        final JLabel label3 = new JLabel();
+        label3.setText("Encryption:");
+        baseP.add(label3, cc.xy(9, 2));
+        mCbEncrypt = new JComboBox();
+        baseP.add(mCbEncrypt, cc.xy(11, 2));
+        btnDelUrl = new JButton();
+        btnDelUrl.setText("Delete");
+        baseP.add(btnDelUrl, cc.xy(7, 2));
         mBtnSaveApi = new JButton();
         mBtnSaveApi.setText("Save");
         baseP.add(mBtnSaveApi, cc.xy(7, 4));
         mBtnNewApi = new JButton();
         mBtnNewApi.setText("Copy New");
         baseP.add(mBtnNewApi, cc.xy(9, 4));
-        final JLabel label3 = new JLabel();
-        label3.setText("Encryption:");
-        baseP.add(label3, cc.xy(7, 2));
-        mCbEncrypt = new JComboBox();
-        baseP.add(mCbEncrypt, cc.xy(9, 2));
+        btnDelApi = new JButton();
+        btnDelApi.setText("Delete");
+        baseP.add(btnDelApi, cc.xy(11, 4));
     }
 
     /** @noinspection ALL */

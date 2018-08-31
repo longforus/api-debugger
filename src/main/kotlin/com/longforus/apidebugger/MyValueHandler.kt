@@ -22,10 +22,10 @@ object MyValueHandler {
             if (value == field) {
                 return
             }
+            field = value
             value?.let {
                 UILifecycleHandler.initProject(it, mainPanel)
             }
-            field = value
         }
 
 
