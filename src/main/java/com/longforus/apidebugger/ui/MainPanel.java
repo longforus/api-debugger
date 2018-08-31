@@ -2,12 +2,12 @@ package com.longforus.apidebugger.ui;
 
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
-import com.longforus.apidebugger.MyValueHandler;
+import com.longforus.apidebugger.UIActionHandler;
+import com.longforus.apidebugger.UILifecycleHandler;
 import java.awt.Dimension;
 import java.awt.HeadlessException;
 import java.awt.Toolkit;
 import javax.swing.BorderFactory;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
@@ -17,6 +17,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  * Created by XQ Yang on 8/30/2018  10:34 AM.
@@ -24,9 +25,7 @@ import javax.swing.JTextPane;
  */
 
 public class MainPanel extends JFrame {
-    private JComboBox mCbProject;
     private JComboBox mCbBaseUrl;
-    private JButton mBtnSaveProject;
     private JButton mBtnSaveBaseUrl;
     private JComboBox mCbApiUrl;
     private JButton mBtnSend;
@@ -39,6 +38,14 @@ public class MainPanel extends JFrame {
     private JButton mBtnNewApi;
     private JLabel lbStatus;
     private JPanel baseP;
+
+    public JTable getTbParame() {
+        return mTbParame;
+    }
+
+    public JComboBox getCbEncrypt() {
+        return mCbEncrypt;
+    }
 
     public JSONEditPanel getJep() {
         return mJep;
@@ -56,13 +63,25 @@ public class MainPanel extends JFrame {
         return mTpInfo;
     }
 
+    public JComboBox getCbBaseUrl() {
+        return mCbBaseUrl;
+    }
+
+    public JComboBox getCbApiUrl() {
+        return mCbApiUrl;
+    }
+
     public MainPanel(String title) throws HeadlessException {
         super(title);
         $$$setupUI$$$();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setContentPane(baseP);
-        mCbEncrypt.setModel(new DefaultComboBoxModel(MyValueHandler.INSTANCE.getEncryptImplList().toArray()));
-
+        setJMenuBar(UILifecycleHandler.INSTANCE.getMenuBar());
+        mTbParame.setModel(new DefaultTableModel(new Object[] { "key", "value" }, 15));
+        mBtnSaveBaseUrl.addActionListener(e -> UIActionHandler.INSTANCE.onSaveBaseUrl());
+        mBtnSaveApi.addActionListener(e -> UIActionHandler.INSTANCE.onSaveApi());
+        mBtnNewApi.addActionListener(e -> UIActionHandler.INSTANCE.onNewApi());
+        mBtnSend.addActionListener(e -> UIActionHandler.INSTANCE.onSend());
         pack();
         Dimension screensize = Toolkit.getDefaultToolkit().getScreenSize();
         int x = (int) screensize.getWidth() / 2 - baseP.getPreferredSize().width / 2;
@@ -88,71 +107,62 @@ public class MainPanel extends JFrame {
         baseP.setLayout(new FormLayout(
             "fill:d:noGrow,left:4dlu:noGrow,fill:300px:noGrow,left:4dlu:noGrow,fill:d:noGrow,left:4dlu:noGrow,fill:d:noGrow,left:4dlu:noGrow,fill:d:noGrow,left:4dlu:noGrow," +
                 "fill:max(p;600px):grow",
-            "center:d:noGrow,top:4dlu:noGrow,center:max(d;4px):noGrow,top:4dlu:noGrow,center:max(d;4px):noGrow,top:4dlu:noGrow,center:200px:noGrow,top:4dlu:noGrow,center:max(p;" +
-                "600px):grow,center:max(d;4px):noGrow"));
+            "center:d:noGrow,center:max(d;4px):noGrow,top:4dlu:noGrow,center:max(d;4px):noGrow,top:4dlu:noGrow,center:200px:noGrow,top:4dlu:noGrow,center:max(p;600px):grow," +
+                "center:max(d;4px):noGrow"));
         baseP.setName("Api debugger");
         baseP.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1), null));
         final JLabel label1 = new JLabel();
-        label1.setText("Project:");
+        label1.setText("Base Url:");
         CellConstraints cc = new CellConstraints();
-        baseP.add(label1, cc.xy(1, 1));
-        mCbProject = new JComboBox();
-        mCbProject.setEditable(true);
-        mCbProject.setName("Project");
-        baseP.add(mCbProject, cc.xy(3, 1));
-        mBtnSaveProject = new JButton();
-        mBtnSaveProject.setText("Save");
-        baseP.add(mBtnSaveProject, cc.xy(5, 1));
-        final JLabel label2 = new JLabel();
-        label2.setText("Encryption:");
-        baseP.add(label2, cc.xy(7, 1));
-        mCbEncrypt = new JComboBox();
-        baseP.add(mCbEncrypt, cc.xy(9, 1));
-        final JLabel label3 = new JLabel();
-        label3.setText("Base Url:");
-        baseP.add(label3, cc.xy(1, 3));
+        baseP.add(label1, cc.xy(1, 2));
         mCbBaseUrl = new JComboBox();
         mCbBaseUrl.setEditable(true);
-        baseP.add(mCbBaseUrl, cc.xy(3, 3));
+        baseP.add(mCbBaseUrl, cc.xy(3, 2));
         mBtnSaveBaseUrl = new JButton();
         mBtnSaveBaseUrl.setText("Save");
-        baseP.add(mBtnSaveBaseUrl, cc.xy(5, 3));
-        final JLabel label4 = new JLabel();
-        label4.setText("Api Url:");
-        baseP.add(label4, cc.xy(1, 5));
+        baseP.add(mBtnSaveBaseUrl, cc.xy(5, 2));
+        final JLabel label2 = new JLabel();
+        label2.setText("Api Url:");
+        baseP.add(label2, cc.xy(1, 4));
         mCbApiUrl = new JComboBox();
         mCbApiUrl.setEditable(true);
-        baseP.add(mCbApiUrl, cc.xy(3, 5));
+        baseP.add(mCbApiUrl, cc.xy(3, 4));
         mBtnSend = new JButton();
         mBtnSend.setText("Send");
-        baseP.add(mBtnSend, cc.xy(5, 5));
+        baseP.add(mBtnSend, cc.xy(5, 4));
         final JScrollPane scrollPane1 = new JScrollPane();
-        baseP.add(scrollPane1, cc.xyw(1, 7, 9, CellConstraints.FILL, CellConstraints.FILL));
+        baseP.add(scrollPane1, cc.xyw(1, 6, 9, CellConstraints.FILL, CellConstraints.FILL));
         scrollPane1.setBorder(BorderFactory.createTitledBorder("Request Parameter"));
         mTbParame = new JTable();
+        mTbParame.setRowHeight(25);
         scrollPane1.setViewportView(mTbParame);
         final JScrollPane scrollPane2 = new JScrollPane();
-        baseP.add(scrollPane2, cc.xyw(1, 9, 9, CellConstraints.FILL, CellConstraints.FILL));
+        baseP.add(scrollPane2, cc.xyw(1, 8, 9, CellConstraints.FILL, CellConstraints.FILL));
         scrollPane2.setBorder(BorderFactory.createTitledBorder("Response"));
         mTpResponse = new JTextPane();
         mTpResponse.setPreferredSize(new Dimension(500, 600));
         scrollPane2.setViewportView(mTpResponse);
         lbStatus = new JLabel();
         lbStatus.setText("Status:");
-        baseP.add(lbStatus, cc.xyw(1, 10, 9));
+        baseP.add(lbStatus, cc.xyw(1, 9, 9));
         final JScrollPane scrollPane3 = new JScrollPane();
-        baseP.add(scrollPane3, cc.xywh(11, 1, 1, 6, CellConstraints.FILL, CellConstraints.FILL));
+        baseP.add(scrollPane3, cc.xywh(11, 1, 1, 5, CellConstraints.FILL, CellConstraints.FILL));
         scrollPane3.setBorder(BorderFactory.createTitledBorder("Request Information"));
         mTpInfo = new JTextPane();
         scrollPane3.setViewportView(mTpInfo);
-        baseP.add(mJep, cc.xywh(11, 7, 1, 3));
+        baseP.add(mJep, cc.xywh(11, 6, 1, 3));
         mJep.setBorder(BorderFactory.createTitledBorder("Json Tree"));
         mBtnSaveApi = new JButton();
         mBtnSaveApi.setText("Save");
-        baseP.add(mBtnSaveApi, cc.xy(7, 5));
+        baseP.add(mBtnSaveApi, cc.xy(7, 4));
         mBtnNewApi = new JButton();
         mBtnNewApi.setText("Copy New");
-        baseP.add(mBtnNewApi, cc.xy(9, 5));
+        baseP.add(mBtnNewApi, cc.xy(9, 4));
+        final JLabel label3 = new JLabel();
+        label3.setText("Encryption:");
+        baseP.add(label3, cc.xy(7, 2));
+        mCbEncrypt = new JComboBox();
+        baseP.add(mCbEncrypt, cc.xy(9, 2));
     }
 
     /** @noinspection ALL */

@@ -1,9 +1,8 @@
 package com.longforus.apidebugger
 
 import com.google.gson.JsonObject
+import com.longforus.apidebugger.MyValueHandler.encryptHandler
 import com.longforus.apidebugger.MyValueHandler.gson
-import com.longforus.apidebugger.encrypt.DefaultEncryptHandler
-import com.longforus.apidebugger.encrypt.IEncryptHandler
 import com.longforus.apidebugger.ui.JSONEditPanel
 import com.longforus.apidebugger.ui.MainPanel
 import okhttp3.*
@@ -26,7 +25,7 @@ object HttpManage {
 
 
 
-    var encryptHandler:IEncryptHandler = DefaultEncryptHandler()
+
 
 
     /**

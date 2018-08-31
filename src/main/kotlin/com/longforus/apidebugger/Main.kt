@@ -11,11 +11,13 @@ import java.awt.EventQueue
  */
 
 lateinit var mainPanel: MainPanel
+val appName = "Fec Api debugger"
 
 fun main(args: Array<String>) {
+    OB.init()
     EventQueue.invokeLater {
-        netWorkInit()
-        mainPanel = MainPanel("Fec Api debugger")
+        mainPanel = MainPanel(appName)
+        UILifecycleHandler.onResume(mainPanel)
         mainPanel.jep.alignmentX = Component.LEFT_ALIGNMENT
         mainPanel.jep.addTreeSelectionListener(JsonTreeActionHandler)
         HttpManage.mainPanel = mainPanel
@@ -28,6 +30,4 @@ fun main(args: Array<String>) {
     }
 }
 
-fun netWorkInit() {
-    HttpManage.encryptHandler = MyValueHandler.encryptImplList[0]
-}
+

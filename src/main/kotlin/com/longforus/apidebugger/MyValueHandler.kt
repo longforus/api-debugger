@@ -1,6 +1,8 @@
 package com.longforus.apidebugger
 
 import com.google.gson.Gson
+import com.longforus.apidebugger.bean.ApiBean
+import com.longforus.apidebugger.bean.ProjectBean
 import com.longforus.apidebugger.encrypt.DefaultEncryptHandler
 import com.longforus.apidebugger.encrypt.IEncryptHandler
 import com.longforus.apidebugger.encrypt.kzEncryptHandler
@@ -10,7 +12,43 @@ import com.longforus.apidebugger.encrypt.kzEncryptHandler
  * Description :
  */
 
- object MyValueHandler{
-    val encryptImplList = listOf<IEncryptHandler>(kzEncryptHandler(),DefaultEncryptHandler())
+object MyValueHandler {
+    var encryptHandler: IEncryptHandler = DefaultEncryptHandler()
+    val encryptImplList = listOf<IEncryptHandler>(kzEncryptHandler(), DefaultEncryptHandler())
     val gson = Gson()
+
+    var curProject: ProjectBean? = null
+        set(value) {
+            if (value == field) {
+                return
+            }
+            value?.let {
+                UILifecycleHandler.initProject(it, mainPanel)
+            }
+            field = value
+        }
+
+
+    var curApi: ApiBean? = null
+     set(value) {
+         if (value == field) {
+             return
+         }
+         field = value
+         value?.let {
+             UILifecycleHandler.initApi(value)
+         }
+     }
+
+    var curBaseUrl = ""
+
+    fun encrcyptId2Index(id: Int): Int {
+        encryptImplList.forEachIndexed { index, iEncryptHandler ->
+            if (iEncryptHandler.typeCode == id) {
+                return index
+            }
+        }
+        return 0
+    }
+
 }

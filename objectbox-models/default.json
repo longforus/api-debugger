@@ -1,0 +1,73 @@
+{
+  "_note1": "KEEP THIS FILE! Check it into a version control system (VCS) like git.",
+  "_note2": "ObjectBox manages crucial IDs for your object model. See docs for details.",
+  "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
+  "entities": [
+    {
+      "id": "1:5106563832689104204",
+      "lastPropertyId": "6:289187461763749700",
+      "name": "ApiBean",
+      "properties": [
+        {
+          "id": "1:7111733236036987178",
+          "name": "id"
+        },
+        {
+          "id": "2:5476738677424130682",
+          "name": "method"
+        },
+        {
+          "id": "3:4426015197720182937",
+          "indexId": "1:6428961294737086977",
+          "name": "url"
+        },
+        {
+          "id": "4:384325182237240164",
+          "name": "parameMap"
+        },
+        {
+          "id": "5:8679731387982128062",
+          "name": "encryptType"
+        },
+        {
+          "id": "6:289187461763749700",
+          "indexId": "2:8874929421314312625",
+          "name": "projectId"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "2:2818616999448140139",
+      "lastPropertyId": "3:1844758545186169842",
+      "name": "ProjectBean",
+      "properties": [
+        {
+          "id": "1:7849693985632742549",
+          "name": "id"
+        },
+        {
+          "id": "2:3979305607409224008",
+          "indexId": "3:3289518476068271070",
+          "name": "name"
+        },
+        {
+          "id": "3:1844758545186169842",
+          "name": "baseUrlList"
+        }
+      ],
+      "relations": []
+    }
+  ],
+  "lastEntityId": "2:2818616999448140139",
+  "lastIndexId": "3:3289518476068271070",
+  "lastRelationId": "0:0",
+  "lastSequenceId": "0:0",
+  "modelVersion": 4,
+  "modelVersionParserMinimum": 4,
+  "retiredEntityUids": [],
+  "retiredIndexUids": [],
+  "retiredPropertyUids": [],
+  "retiredRelationUids": [],
+  "version": 1
+}

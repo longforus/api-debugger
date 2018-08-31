@@ -1,6 +1,7 @@
 package com.longforus.apidebugger
 
 import java.awt.Color
+import javax.swing.JOptionPane
 import javax.swing.JTextPane
 import javax.swing.text.BadLocationException
 import javax.swing.text.MutableAttributeSet
@@ -26,4 +27,8 @@ fun JTextPane.append(str:String,color: Color? = null){
         }
 
     }
+}
+
+fun showErrorMsg(msg:String){
+    JOptionPane.showMessageDialog(null, msg,"Error", JOptionPane.ERROR)
 }
