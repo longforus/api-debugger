@@ -13,6 +13,9 @@ import com.longforus.apidebugger.encrypt.kzEncryptHandler
  */
 
 object MyValueHandler {
+
+    const val PARAME_TABLE_ROW_COUNT = 15
+
     var encryptHandler: IEncryptHandler = DefaultEncryptHandler()
     val encryptImplList = listOf<IEncryptHandler>(kzEncryptHandler(), DefaultEncryptHandler())
     val gson = Gson()
@@ -35,14 +38,12 @@ object MyValueHandler {
              return
          }
          field = value
-         value?.let {
-             UILifecycleHandler.initApi(value)
-         }
+         UILifecycleHandler.initApi(value)
      }
 
     var curBaseUrl = ""
 
-    fun encrcyptId2Index(id: Int): Int {
+    fun encryptId2Index(id: Int): Int {
         encryptImplList.forEachIndexed { index, iEncryptHandler ->
             if (iEncryptHandler.typeCode == id) {
                 return index
@@ -50,5 +51,6 @@ object MyValueHandler {
         }
         return 0
     }
+    fun encryptIndex2Id(index: Int)=encryptImplList[index].typeCode
 
 }

@@ -2,14 +2,13 @@ package com.longforus.apidebugger
 
 import com.longforus.apidebugger.MyValueHandler.curApi
 import com.longforus.apidebugger.MyValueHandler.curProject
-import com.longforus.apidebugger.MyValueHandler.encrcyptId2Index
-import com.longforus.apidebugger.MyValueHandler.encryptHandler
 import com.longforus.apidebugger.bean.ApiBean
 import com.longforus.apidebugger.bean.ProjectBean
 import com.longforus.apidebugger.bean.ProjectBean_
 import com.longforus.apidebugger.ui.MainPanel
 import io.objectbox.kotlin.query
 import javax.swing.*
+import javax.swing.table.DefaultTableModel
 
 /**
  * Created by XQ Yang on 8/31/2018  11:23 AM.
@@ -34,18 +33,26 @@ object UILifecycleHandler {
         val apis = it.apis
         mainPanel.cbApiUrl.model = DefaultComboBoxModel(apis.toTypedArray())
         if (apis.isNotEmpty()) {
-            curApi = apis.last()
+            curApi = apis[0]
         }
     }
 
     fun initApi(api: ApiBean?){
-        api?.let {
-            val id2Index = encrcyptId2Index(it.encryptType)
+        if (api == null) {
+            mainPanel.cbEncrypt.selectedIndex = 0
+            MyValueHandler.encryptHandler = MyValueHandler.encryptImplList[0]
+            mainPanel.tbParame.model = DefaultTableModel(arrayOf( "key", "value"), MyValueHandler.PARAME_TABLE_ROW_COUNT)
+        } else {
+            val id2Index = MyValueHandler.encryptId2Index(api.encryptType)
             mainPanel.cbEncrypt.selectedIndex = id2Index
-            encryptHandler = MyValueHandler.encryptImplList[id2Index]
-            it.parameMap.entries.forEachIndexed { index, entry ->
-                mainPanel.tbParame.model.setValueAt(entry.key, index, 0)
-                mainPanel.tbParame.model.setValueAt(entry.value, index, 1)
+            MyValueHandler.encryptHandler = MyValueHandler.encryptImplList[id2Index]
+            if (api.parameMap.isEmpty()) {
+                mainPanel.tbParame.model = DefaultTableModel(arrayOf( "key", "value"), MyValueHandler.PARAME_TABLE_ROW_COUNT)
+            } else {
+                api.parameMap.entries.forEachIndexed { index, entry ->
+                    mainPanel.tbParame.model.setValueAt(entry.key, index, 0)
+                    mainPanel.tbParame.model.setValueAt(entry.value, index, 1)
+                }
             }
         }
     }

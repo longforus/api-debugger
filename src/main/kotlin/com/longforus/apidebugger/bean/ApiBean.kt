@@ -4,7 +4,6 @@ import io.objectbox.annotation.Convert
 import io.objectbox.annotation.Entity
 import io.objectbox.annotation.Id
 import io.objectbox.annotation.Index
-import io.objectbox.relation.ToOne
 
 /**
  * Created by XQ Yang on 8/30/2018  5:41 PM.
@@ -19,33 +18,21 @@ var id: Long = 0,
     @Convert(converter = MapDbConverter::class,
         dbType = String::class)
     var parameMap: Map<String, String> = mapOf(),
-    var encryptType: Int = 0) {
+    var encryptType: Int = 0,var projectId:Long = 0) {
 
-    constructor(url: String) : this() {
+    constructor(url: String,projectId: Long) : this() {
         this.url = url
+        this.projectId = projectId
     }
 
-//    var project: ToOne<ProjectBean> = ToOne(this,ApiBean_.project)
-    lateinit var project: ToOne<ProjectBean>
+
 
     override fun toString(): String {
         return url
     }
 
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
 
-        other as ApiBean
 
-        if (url != other.url) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        return url.hashCode()
-    }
 
 
 }

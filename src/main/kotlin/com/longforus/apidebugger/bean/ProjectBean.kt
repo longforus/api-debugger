@@ -1,7 +1,11 @@
 package com.longforus.apidebugger.bean
 
-import io.objectbox.annotation.*
-import io.objectbox.relation.ToMany
+import com.longforus.apidebugger.OB
+import io.objectbox.annotation.Convert
+import io.objectbox.annotation.Entity
+import io.objectbox.annotation.Id
+import io.objectbox.annotation.Index
+import io.objectbox.kotlin.query
 
 /**
  * Created by XQ Yang on 8/30/2018  5:40 PM.
@@ -17,11 +21,17 @@ data class ProjectBean(
         dbType = String::class)
     var baseUrlList: MutableList<String> = mutableListOf()) {
 
-//    @Backlink(to = "project")
-//    var apis: ToMany<ApiBean> = ToMany(this,ProjectBean_.apis)
-    @Backlink(to = "project")
-    var apis: ToMany<ApiBean> = ToMany(this,ProjectBean_.apis)
-//    get() {if (field==null) mutableListOf<ApiBean>() else field}
+
+    @Transient
+    var apis: MutableList<ApiBean> = mutableListOf()
+        get() {
+            field.clear()
+            field.addAll(OB.apiBox.query {
+                equal(ApiBean_.projectId, id)
+            }.find().sortedByDescending { apiBean -> apiBean.id })
+            return field
+        }
+
 
     override fun toString(): String {
         return name

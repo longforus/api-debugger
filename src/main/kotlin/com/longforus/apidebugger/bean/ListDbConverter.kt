@@ -11,12 +11,18 @@ import io.objectbox.converter.PropertyConverter
 class ListDbConverter : PropertyConverter<List<String>, String> {
 
     override fun convertToEntityProperty(databaseValue: String?): List<String> {
+        if (databaseValue.isNullOrEmpty()) {
+            return mutableListOf()
+        }
         val type = object : TypeToken<List<String>>() {}.type
         return MyValueHandler.gson.fromJson(databaseValue, type)
     }
 
-    override fun convertToDatabaseValue(entityProperty:List<String>?): String {
-      return MyValueHandler.gson.toJson(entityProperty)
+    override fun convertToDatabaseValue(entityProperty: List<String>?): String {
+        if (entityProperty == null) {
+            return ""
+        }
+        return MyValueHandler.gson.toJson(entityProperty)
     }
 
 }

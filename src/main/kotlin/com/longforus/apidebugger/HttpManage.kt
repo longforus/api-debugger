@@ -82,12 +82,12 @@ object HttpManage {
     @Throws(Exception::class)
     private fun buildRequest(url: String, params: Map<String, String>?, httpMethodType: Int): Request {
         val builder = Request.Builder()
-        if (httpMethodType == 0) {
+        if (httpMethodType == 1) {
             mainPanel.tpInfo.append("OkHttp GET \n", Color.RED)
             encryptHandler.onGetMethodEncrypt(params, builder, url)
             builder.get()
 
-        } else if (httpMethodType == 1) {
+        } else if (httpMethodType == 0) {
             mainPanel.tpInfo.append("OkHttp POST \n", Color.RED)
             builder.url(url)
             builder.post( encryptHandler.onPostMethodEncrypt(params,builder,url))

@@ -2,12 +2,15 @@ package com.longforus.apidebugger.ui;
 
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
+import com.longforus.apidebugger.MyValueHandler;
 import com.longforus.apidebugger.UIActionHandler;
 import com.longforus.apidebugger.UILifecycleHandler;
+import com.longforus.apidebugger.bean.ApiBean;
 import java.awt.Dimension;
 import java.awt.HeadlessException;
 import java.awt.Toolkit;
 import javax.swing.BorderFactory;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
@@ -40,6 +43,7 @@ public class MainPanel extends JFrame {
     private JPanel baseP;
     private JButton btnDelUrl;
     private JButton btnDelApi;
+    private JComboBox mCbMethod;
 
     public JTable getTbParame() {
         return mTbParame;
@@ -73,17 +77,27 @@ public class MainPanel extends JFrame {
         return mCbApiUrl;
     }
 
+    public int getSelectedEncryptID() {
+        return MyValueHandler.INSTANCE.encryptIndex2Id(mCbEncrypt.getSelectedIndex());
+    }
+
+    public int getSelectedMethodType() {
+        return MyValueHandler.INSTANCE.encryptIndex2Id(mCbEncrypt.getSelectedIndex());
+    }
+
     public MainPanel(String title) throws HeadlessException {
         super(title);
         $$$setupUI$$$();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        mCbMethod.setModel(new DefaultComboBoxModel(new String[] { "POST", "GET" }));
         setContentPane(baseP);
         setJMenuBar(UILifecycleHandler.INSTANCE.getMenuBar());
-        mTbParame.setModel(new DefaultTableModel(new Object[] { "key", "value" }, 15));
+        mTbParame.setModel(new DefaultTableModel(new Object[] { "key", "value" }, MyValueHandler.PARAME_TABLE_ROW_COUNT));
         mBtnSaveBaseUrl.addActionListener(e -> UIActionHandler.INSTANCE.onSaveBaseUrl(mCbBaseUrl.getModel().getSelectedItem()));
         btnDelUrl.addActionListener(e -> UIActionHandler.INSTANCE.onDelBaseUrl(mCbBaseUrl.getModel().getSelectedItem()));
-        btnDelApi.addActionListener(e -> UIActionHandler.INSTANCE.onDelApiUrl(mCbApiUrl.getModel().getSelectedItem()));
+        btnDelApi.addActionListener(e -> UIActionHandler.INSTANCE.onDelApiUrl((ApiBean) mCbApiUrl.getModel().getSelectedItem()));
         mBtnSaveApi.addActionListener(e -> UIActionHandler.INSTANCE.onSaveApi(mCbApiUrl.getModel().getSelectedItem()));
+        mCbApiUrl.addItemListener(e -> UIActionHandler.INSTANCE.onApiItemChanged(((ApiBean) e.getItem())));
         mBtnNewApi.addActionListener(e -> UIActionHandler.INSTANCE.onNewApi());
         mBtnSend.addActionListener(e -> UIActionHandler.INSTANCE.onSend());
         pack();
@@ -111,8 +125,8 @@ public class MainPanel extends JFrame {
         baseP.setLayout(new FormLayout(
             "fill:d:noGrow,left:4dlu:noGrow,fill:300px:noGrow,left:4dlu:noGrow,fill:d:noGrow,left:4dlu:noGrow,fill:max(d;4px):noGrow,left:4dlu:noGrow,fill:d:noGrow," +
                 "left:4dlu:noGrow,fill:d:noGrow,left:4dlu:noGrow,fill:max(p;600px):grow",
-            "center:d:noGrow,center:max(d;4px):noGrow,top:4dlu:noGrow,center:max(d;4px):noGrow,top:4dlu:noGrow,center:200px:noGrow,top:4dlu:noGrow,center:max(p;600px):grow," +
-                "center:max(d;4px):noGrow"));
+            "center:d:noGrow,center:max(d;4px):noGrow,top:4dlu:noGrow,center:max(d;4px):noGrow,top:4dlu:noGrow,center:max(d;4px):noGrow,top:4dlu:noGrow,center:200px:noGrow," +
+                "top:4dlu:noGrow,center:max(p;600px):grow,center:max(d;4px):noGrow"));
         baseP.setName("Api debugger");
         baseP.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1), null));
         final JLabel label1 = new JLabel();
@@ -125,54 +139,59 @@ public class MainPanel extends JFrame {
         mBtnSaveBaseUrl = new JButton();
         mBtnSaveBaseUrl.setText("Save");
         baseP.add(mBtnSaveBaseUrl, cc.xy(5, 2));
-        final JLabel label2 = new JLabel();
-        label2.setText("Api Url:");
-        baseP.add(label2, cc.xy(1, 4));
-        mCbApiUrl = new JComboBox();
-        mCbApiUrl.setEditable(true);
-        baseP.add(mCbApiUrl, cc.xy(3, 4));
-        mBtnSend = new JButton();
-        mBtnSend.setText("Send");
-        baseP.add(mBtnSend, cc.xy(5, 4));
         final JScrollPane scrollPane1 = new JScrollPane();
-        baseP.add(scrollPane1, cc.xyw(1, 6, 11, CellConstraints.FILL, CellConstraints.FILL));
+        baseP.add(scrollPane1, cc.xyw(1, 8, 11, CellConstraints.FILL, CellConstraints.FILL));
         scrollPane1.setBorder(BorderFactory.createTitledBorder("Request Parameter"));
         mTbParame = new JTable();
         mTbParame.setRowHeight(25);
         scrollPane1.setViewportView(mTbParame);
         final JScrollPane scrollPane2 = new JScrollPane();
-        baseP.add(scrollPane2, cc.xyw(1, 8, 11, CellConstraints.FILL, CellConstraints.FILL));
+        baseP.add(scrollPane2, cc.xyw(1, 10, 11, CellConstraints.FILL, CellConstraints.FILL));
         scrollPane2.setBorder(BorderFactory.createTitledBorder("Response"));
         mTpResponse = new JTextPane();
         mTpResponse.setPreferredSize(new Dimension(500, 600));
         scrollPane2.setViewportView(mTpResponse);
         lbStatus = new JLabel();
         lbStatus.setText("Status:");
-        baseP.add(lbStatus, cc.xyw(1, 9, 11));
+        baseP.add(lbStatus, cc.xyw(1, 11, 11));
         final JScrollPane scrollPane3 = new JScrollPane();
-        baseP.add(scrollPane3, cc.xywh(13, 1, 1, 6, CellConstraints.FILL, CellConstraints.FILL));
+        baseP.add(scrollPane3, cc.xywh(13, 1, 1, 8, CellConstraints.FILL, CellConstraints.FILL));
         scrollPane3.setBorder(BorderFactory.createTitledBorder("Request Information"));
         mTpInfo = new JTextPane();
         scrollPane3.setViewportView(mTpInfo);
-        baseP.add(mJep, cc.xywh(13, 7, 1, 2));
+        baseP.add(mJep, cc.xywh(13, 9, 1, 2));
         mJep.setBorder(BorderFactory.createTitledBorder("Json Tree"));
-        final JLabel label3 = new JLabel();
-        label3.setText("Encryption:");
-        baseP.add(label3, cc.xy(9, 2));
+        final JLabel label2 = new JLabel();
+        label2.setText("Encryption:");
+        baseP.add(label2, cc.xy(9, 2));
         mCbEncrypt = new JComboBox();
         baseP.add(mCbEncrypt, cc.xy(11, 2));
         btnDelUrl = new JButton();
         btnDelUrl.setText("Delete");
         baseP.add(btnDelUrl, cc.xy(7, 2));
+        final JLabel label3 = new JLabel();
+        label3.setText("Mthod:");
+        baseP.add(label3, cc.xy(1, 4));
+        mCbApiUrl = new JComboBox();
+        mCbApiUrl.setEditable(true);
+        baseP.add(mCbApiUrl, cc.xyw(3, 6, 7));
+        mCbMethod = new JComboBox();
+        baseP.add(mCbMethod, cc.xy(3, 4));
+        final JLabel label4 = new JLabel();
+        label4.setText("Api Url:");
+        baseP.add(label4, cc.xy(1, 6));
+        btnDelApi = new JButton();
+        btnDelApi.setText("Delete");
+        baseP.add(btnDelApi, cc.xy(11, 4));
         mBtnSaveApi = new JButton();
         mBtnSaveApi.setText("Save");
         baseP.add(mBtnSaveApi, cc.xy(7, 4));
         mBtnNewApi = new JButton();
         mBtnNewApi.setText("Copy New");
         baseP.add(mBtnNewApi, cc.xy(9, 4));
-        btnDelApi = new JButton();
-        btnDelApi.setText("Delete");
-        baseP.add(btnDelApi, cc.xy(11, 4));
+        mBtnSend = new JButton();
+        mBtnSend.setText("Send");
+        baseP.add(mBtnSend, cc.xy(11, 6));
     }
 
     /** @noinspection ALL */
