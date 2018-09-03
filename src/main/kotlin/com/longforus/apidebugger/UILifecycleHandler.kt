@@ -40,12 +40,11 @@ object UILifecycleHandler {
     fun initApi(api: ApiBean?){
         if (api == null) {
             mainPanel.cbEncrypt.selectedIndex = 0
-            MyValueHandler.encryptHandler = MyValueHandler.encryptImplList[0]
             mainPanel.tbParame.model = DefaultTableModel(arrayOf( "key", "value"), MyValueHandler.PARAME_TABLE_ROW_COUNT)
         } else {
             val id2Index = MyValueHandler.encryptId2Index(api.encryptType)
             mainPanel.cbEncrypt.selectedIndex = id2Index
-            MyValueHandler.encryptHandler = MyValueHandler.encryptImplList[id2Index]
+            mainPanel.cbMethod.selectedIndex = api.method
             if (api.parameMap.isEmpty()) {
                 mainPanel.tbParame.model = DefaultTableModel(arrayOf( "key", "value"), MyValueHandler.PARAME_TABLE_ROW_COUNT)
             } else {

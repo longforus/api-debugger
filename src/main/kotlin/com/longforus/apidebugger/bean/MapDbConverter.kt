@@ -12,11 +12,11 @@ class MapDbConverter : PropertyConverter<Map<String, String>, String> {
 
     override fun convertToEntityProperty(databaseValue: String?): Map<String, String> {
         val type = object : TypeToken<Map<String, String>>() {}.type
-        return MyValueHandler.gson.fromJson(databaseValue, type)
+        return MyValueHandler.mGson.fromJson(databaseValue, type)
     }
 
     override fun convertToDatabaseValue(entityProperty: Map<String, String>?): String {
-      return MyValueHandler.gson.toJson(entityProperty)
+      return MyValueHandler.mGson.toJson(entityProperty)
     }
 
 }

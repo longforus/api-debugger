@@ -15,14 +15,14 @@ class ListDbConverter : PropertyConverter<List<String>, String> {
             return mutableListOf()
         }
         val type = object : TypeToken<List<String>>() {}.type
-        return MyValueHandler.gson.fromJson(databaseValue, type)
+        return MyValueHandler.mGson.fromJson(databaseValue, type)
     }
 
     override fun convertToDatabaseValue(entityProperty: List<String>?): String {
         if (entityProperty == null) {
             return ""
         }
-        return MyValueHandler.gson.toJson(entityProperty)
+        return MyValueHandler.mGson.toJson(entityProperty)
     }
 
 }

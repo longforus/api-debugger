@@ -83,7 +83,9 @@
           <grid row="9" column="0" row-span="1" col-span="11" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
           <forms defaultalign-horz="false" defaultalign-vert="false"/>
         </constraints>
-        <properties/>
+        <properties>
+          <horizontalScrollBarPolicy value="31"/>
+        </properties>
         <border type="none" title="Response"/>
         <children>
           <component id="368c1" class="javax.swing.JTextPane" binding="mTpResponse">

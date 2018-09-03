@@ -1,6 +1,6 @@
 package com.longforus.apidebugger
 
-import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import com.longforus.apidebugger.bean.ApiBean
 import com.longforus.apidebugger.bean.ProjectBean
 import com.longforus.apidebugger.encrypt.DefaultEncryptHandler
@@ -16,9 +16,9 @@ object MyValueHandler {
 
     const val PARAME_TABLE_ROW_COUNT = 15
 
-    var encryptHandler: IEncryptHandler = DefaultEncryptHandler()
+
     val encryptImplList = listOf<IEncryptHandler>(kzEncryptHandler(), DefaultEncryptHandler())
-    val gson = Gson()
+    val mGson =GsonBuilder().setPrettyPrinting().create()
 
     var curProject: ProjectBean? = null
         set(value) {
@@ -52,5 +52,21 @@ object MyValueHandler {
         return 0
     }
     fun encryptIndex2Id(index: Int)=encryptImplList[index].typeCode
+
+
+//    private fun formatJson(json: String): String {
+//        var json = json
+//        try {
+//            if (json.startsWith("{")) {
+//                json = JSONObject(json).toString(4)
+//            } else if (json.startsWith("[")) {
+//                json = JSONArray(json).toString(4)
+//            }
+//        } catch (e: JSONException) {
+//            e.printStackTrace()
+//        }
+//
+//        return json
+//    }
 
 }

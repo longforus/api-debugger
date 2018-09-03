@@ -18,7 +18,7 @@ var id: Long = 0,
     @Convert(converter = MapDbConverter::class,
         dbType = String::class)
     var parameMap: Map<String, String> = mapOf(),
-    var encryptType: Int = 0,var projectId:Long = 0) {
+    var encryptType: Int = 0,var projectId:Long = 0): kotlin.Cloneable {
 
     constructor(url: String,projectId: Long) : this() {
         this.url = url
@@ -32,6 +32,13 @@ var id: Long = 0,
     }
 
 
+    public override fun clone(): Any {
+        val map = mutableMapOf<String,String>()
+        parameMap.forEach { t, u ->
+            map[t] = u
+        }
+        return ApiBean(method = this.method,url = this.url+"新",parameMap = map,encryptType = this.encryptType,projectId = this.projectId)
+    }
 
 
 

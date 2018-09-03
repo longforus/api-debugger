@@ -1,8 +1,8 @@
 package com.longforus.apidebugger
 
 import com.google.gson.JsonObject
-import com.longforus.apidebugger.MyValueHandler.encryptHandler
-import com.longforus.apidebugger.MyValueHandler.gson
+import com.longforus.apidebugger.MyValueHandler.mGson
+import com.longforus.apidebugger.bean.ApiBean
 import com.longforus.apidebugger.ui.JSONEditPanel
 import com.longforus.apidebugger.ui.MainPanel
 import okhttp3.*
@@ -24,20 +24,8 @@ object HttpManage {
         .connectTimeout(60, TimeUnit.SECONDS).build()
 
 
-
-
-
-
-    /**
-     * get方式联网请求数据
-     */
-    fun get(relativeUrl: String, params: Map<String,String>) {
-        val request = buildRequest(getAbsoluteUrl(relativeUrl), params, 0)
-        doRequest(request)
-    }
-
-    fun post(relativeUrl: String, params: Map<String,String>) {
-        val request = buildRequest(getAbsoluteUrl(relativeUrl), params, 1)
+    fun sendRequest(api: ApiBean) {
+        val request = buildRequest(getAbsoluteUrl(api.url), api.parameMap, api.method, api.encryptType)
         doRequest(request)
     }
 
@@ -60,13 +48,13 @@ object HttpManage {
                 if (response.isSuccessful) {
                     val body = response.body() ?: return
                     val resStr = body.string()
-                    val json = gson.fromJson<JsonObject>(resStr, JsonObject::class.java)
-                    mainPanel.tpResponse.append(json.toString())
-                    mainPanel.jep.setJson(resStr,JSONEditPanel.UpdateType.REPLACE)
+                    val json = mGson.fromJson<JsonObject>(resStr,JsonObject::class.java )
+                    mainPanel.tpResponse.append(mGson.toJson(json,JsonObject::class.java))
+                    mainPanel.jep.setJson(resStr, JSONEditPanel.UpdateType.REPLACE)
                 } else {
                     mainPanel.tpInfo.append("on response but not success", Color.RED)
-                    mainPanel.tpInfo.append("code = ${response.code()}", Color.RED)
-                    mainPanel.tpInfo.append("message = ${response.message()}", Color.RED)
+                    mainPanel.tpInfo.append("code = ${response.code()}  ", Color.RED)
+                    mainPanel.tpInfo.append("message = ${response.message()}  \n", Color.RED)
                 }
             }
         })
@@ -80,23 +68,20 @@ object HttpManage {
      */
 
     @Throws(Exception::class)
-    private fun buildRequest(url: String, params: Map<String, String>?, httpMethodType: Int): Request {
+    private fun buildRequest(url: String, params: Map<String, String>?, httpMethodType: Int, encryptType: Int): Request {
         val builder = Request.Builder()
+        val iEncryptHandler = MyValueHandler.encryptImplList[MyValueHandler.encryptId2Index(encryptType)]
         if (httpMethodType == 1) {
             mainPanel.tpInfo.append("OkHttp GET \n", Color.RED)
-            encryptHandler.onGetMethodEncrypt(params, builder, url)
+            iEncryptHandler.onGetMethodEncrypt(params, builder, url)
             builder.get()
-
         } else if (httpMethodType == 0) {
             mainPanel.tpInfo.append("OkHttp POST \n", Color.RED)
             builder.url(url)
-            builder.post( encryptHandler.onPostMethodEncrypt(params,builder,url))
+            builder.post(iEncryptHandler.onPostMethodEncrypt(params, builder, url))
         }
         return builder.build()
     }
-
-
-
 
 
     /**

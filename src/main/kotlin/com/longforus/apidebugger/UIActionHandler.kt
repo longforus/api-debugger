@@ -58,11 +58,21 @@ object UIActionHandler {
     }
 
     fun onNewApi() {
-
+        val clone = MyValueHandler.curApi?.clone() as ApiBean?
+        clone?.let {
+            OB.apiBox.put(it)
+            MyValueHandler.curProject?.apis?.add(it)
+            MyValueHandler.curApi = it
+            mainPanel.cbApiUrl.insertItemAt(it,0)
+            mainPanel.cbApiUrl.selectedIndex=0
+        }
     }
 
     fun onSend() {
-
+        val api = MyValueHandler.curApi
+        api?.let {
+            HttpManage.sendRequest(api)
+        }
     }
 
     fun onDelBaseUrl(selectedItem: Any) {
@@ -74,11 +84,25 @@ object UIActionHandler {
     fun onDelApiUrl(selectedItem: ApiBean) {
         MyValueHandler.curProject?.apis?.remove(selectedItem)
         mainPanel.cbApiUrl.removeItem(selectedItem)
-        MyValueHandler.curApi = MyValueHandler.curProject?.apis?.get(0)
         OB.apiBox.remove(selectedItem)
+        MyValueHandler.curApi = MyValueHandler.curProject?.apis?.get(0)
     }
 
     fun onApiItemChanged(item: ApiBean) {
         MyValueHandler.curApi = item
+    }
+
+    fun onMethodChanged(index: Int) {
+        if (MyValueHandler.curApi?.method!=index) {
+            MyValueHandler.curApi?.method = index
+            OB.apiBox.put(MyValueHandler.curApi)
+        }
+    }
+
+    fun onEncryptTypeChanged(typeCode: Int) {
+        if (MyValueHandler.curApi?.encryptType!=typeCode) {
+            MyValueHandler.curApi?.encryptType = typeCode
+            OB.apiBox.put(MyValueHandler.curApi)
+        }
     }
 }

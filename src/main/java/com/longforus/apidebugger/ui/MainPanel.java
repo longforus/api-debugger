@@ -3,12 +3,15 @@ package com.longforus.apidebugger.ui;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import com.longforus.apidebugger.MyValueHandler;
+import com.longforus.apidebugger.OB;
 import com.longforus.apidebugger.UIActionHandler;
 import com.longforus.apidebugger.UILifecycleHandler;
 import com.longforus.apidebugger.bean.ApiBean;
+import com.longforus.apidebugger.encrypt.IEncryptHandler;
 import java.awt.Dimension;
 import java.awt.HeadlessException;
 import java.awt.Toolkit;
+import java.awt.event.MouseEvent;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -16,11 +19,21 @@ import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextPane;
+import javax.swing.SizeRequirements;
+import javax.swing.event.MouseInputAdapter;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.text.Element;
+import javax.swing.text.View;
+import javax.swing.text.ViewFactory;
+import javax.swing.text.html.HTMLEditorKit;
+import javax.swing.text.html.InlineView;
+import javax.swing.text.html.ParagraphView;
 
 /**
  * Created by XQ Yang on 8/30/2018  10:34 AM.
@@ -44,6 +57,10 @@ public class MainPanel extends JFrame {
     private JButton btnDelUrl;
     private JButton btnDelApi;
     private JComboBox mCbMethod;
+
+    public JComboBox getCbMethod() {
+        return mCbMethod;
+    }
 
     public JTable getTbParame() {
         return mTbParame;
@@ -100,6 +117,85 @@ public class MainPanel extends JFrame {
         mCbApiUrl.addItemListener(e -> UIActionHandler.INSTANCE.onApiItemChanged(((ApiBean) e.getItem())));
         mBtnNewApi.addActionListener(e -> UIActionHandler.INSTANCE.onNewApi());
         mBtnSend.addActionListener(e -> UIActionHandler.INSTANCE.onSend());
+        mCbMethod.addItemListener(e -> UIActionHandler.INSTANCE.onMethodChanged(mCbMethod.getSelectedIndex()));
+        mCbEncrypt.addItemListener(e -> UIActionHandler.INSTANCE.onEncryptTypeChanged(((IEncryptHandler) e.getItem()).getTypeCode()));
+
+        mTpResponse.addMouseListener(new MouseInputAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                if (e.getButton() == MouseEvent.BUTTON3) {
+                    JPopupMenu menu = new JPopupMenu("Clear");
+                    JMenuItem clear1 = menu.add(new JMenuItem("clear"));
+                    clear1.addActionListener(e1 -> {
+                        mJep.setJson("{}", JSONEditPanel.UpdateType.REPLACE);
+                        mTpResponse.setText("");
+                    });
+                    menu.show(mTpResponse, e.getX(), e.getY());
+                }
+            }
+        });
+        mTpInfo.addMouseListener(new MouseInputAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                if (e.getButton() == MouseEvent.BUTTON3) {
+                    JPopupMenu menu = new JPopupMenu("Clear");
+                    JMenuItem clear1 = menu.add(new JMenuItem("clear"));
+                    clear1.addActionListener(e1 -> mTpInfo.setText(""));
+                    menu.show(mTpInfo, e.getX(), e.getY());
+                }
+            }
+        });
+        //支持自动换行
+        mTpResponse.setEditorKit(new HTMLEditorKit() {
+            @Override
+            public ViewFactory getViewFactory() {
+
+                return new HTMLFactory() {
+                    public View create(Element e) {
+                        View v = super.create(e);
+                        if (v instanceof InlineView) {
+                            return new InlineView(e) {
+                                public int getBreakWeight(int axis, float pos, float len) {
+                                    return GoodBreakWeight;
+                                }
+
+                                public View breakView(int axis, int p0, float pos, float len) {
+                                    if (axis == View.X_AXIS) {
+                                        checkPainter();
+                                        int p1 = getGlyphPainter().getBoundedPosition(this, p0, pos, len);
+                                        if (p0 == getStartOffset() && p1 == getEndOffset()) {
+                                            return this;
+                                        }
+                                        return createFragment(p0, p1);
+                                    }
+                                    return this;
+                                }
+                            };
+                        } else if (v instanceof ParagraphView) {
+                            return new ParagraphView(e) {
+                                protected SizeRequirements calculateMinorAxisRequirements(int axis, SizeRequirements r) {
+                                    if (r == null) {
+                                        r = new SizeRequirements();
+                                    }
+                                    float pref = layoutPool.getPreferredSpan(axis);
+                                    float min = layoutPool.getMinimumSpan(axis);
+                                    // Don't include insets, Box.getXXXSpan will include them.
+                                    r.minimum = (int) min;
+                                    r.preferred = Math.max(r.minimum, (int) pref);
+                                    r.maximum = Integer.MAX_VALUE;
+                                    r.alignment = 0.5f;
+                                    return r;
+                                }
+                            };
+                        }
+                        return v;
+                    }
+                };
+            }
+        });
+        mJep.jTree.setCellRenderer(new JsonTreeCellRenderer());
         pack();
         Dimension screensize = Toolkit.getDefaultToolkit().getScreenSize();
         int x = (int) screensize.getWidth() / 2 - baseP.getPreferredSize().width / 2;
@@ -110,6 +206,12 @@ public class MainPanel extends JFrame {
 
     private void createUIComponents() {
         mJep = new JSONEditPanel();
+    }
+
+    @Override
+    protected void finalize() throws Throwable {
+        super.finalize();
+        OB.INSTANCE.onExit();
     }
 
     /**
@@ -146,6 +248,7 @@ public class MainPanel extends JFrame {
         mTbParame.setRowHeight(25);
         scrollPane1.setViewportView(mTbParame);
         final JScrollPane scrollPane2 = new JScrollPane();
+        scrollPane2.setHorizontalScrollBarPolicy(31);
         baseP.add(scrollPane2, cc.xyw(1, 10, 11, CellConstraints.FILL, CellConstraints.FILL));
         scrollPane2.setBorder(BorderFactory.createTitledBorder("Response"));
         mTpResponse = new JTextPane();

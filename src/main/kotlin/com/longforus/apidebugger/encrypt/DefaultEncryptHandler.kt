@@ -19,7 +19,7 @@ class DefaultEncryptHandler:IEncryptHandler(){
         val encodingBuilder = FormBody.Builder()
         params?.forEach {
             encodingBuilder.add(it.key,it.value)
-            mainPanel.tpInfo.append("key  =  ${it.key}   value =  ${it.value}")
+            mainPanel.tpInfo.append("key  =  ${it.key}   value =  ${it.value} \n")
         }
        return encodingBuilder.build()
     }
