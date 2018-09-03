@@ -6,6 +6,9 @@ import com.longforus.apidebugger.bean.ProjectBean
 import com.longforus.apidebugger.encrypt.DefaultEncryptHandler
 import com.longforus.apidebugger.encrypt.IEncryptHandler
 import com.longforus.apidebugger.encrypt.kzEncryptHandler
+import java.awt.Toolkit
+import java.awt.datatransfer.StringSelection
+
 
 /**
  * Created by XQ Yang on 8/30/2018  5:24 PM.
@@ -42,6 +45,7 @@ object MyValueHandler {
      }
 
     var curBaseUrl = ""
+    var curShowJsonStr   = ""
 
     fun encryptId2Index(id: Int): Int {
         encryptImplList.forEachIndexed { index, iEncryptHandler ->
@@ -54,19 +58,15 @@ object MyValueHandler {
     fun encryptIndex2Id(index: Int)=encryptImplList[index].typeCode
 
 
-//    private fun formatJson(json: String): String {
-//        var json = json
-//        try {
-//            if (json.startsWith("{")) {
-//                json = JSONObject(json).toString(4)
-//            } else if (json.startsWith("[")) {
-//                json = JSONArray(json).toString(4)
-//            }
-//        } catch (e: JSONException) {
-//            e.printStackTrace()
-//        }
-//
-//        return json
-//    }
+
+
+    /**
+     * 将字符串复制到剪切板。
+     */
+    fun setSysClipboardText(writeMe: String) {
+        val clip = Toolkit.getDefaultToolkit().systemClipboard
+        val tText = StringSelection(writeMe)
+        clip.setContents(tText, null)
+    }
 
 }

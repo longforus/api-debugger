@@ -56,6 +56,10 @@ public class JSONJTreeNode extends DefaultMutableTreeNode {
     final String value;
     private int childCount = 0;
 
+    public String getFieldName() {
+        return fieldName;
+    }
+
     /**
      * @param fieldName - name of field if applicable or null
      * @param index - index of element in the array or -1 if not part of an array
@@ -197,7 +201,35 @@ public class JSONJTreeNode extends DefaultMutableTreeNode {
                 } else if (fieldName != null) {
                     return String.format("%s: %s", fieldName, value);
                 } else {
-                    return String.format("%s", value);
+                    return String.format("%s",value);
+                }
+        }
+    }
+    public String toSSearchStr() {
+        switch (dataType) {
+            case ARRAY:
+                if (index >= 0) {
+                    return String.format("%d [%d]", index, childCount);
+                }else if (fieldName != null) {
+                    return String.format("%s [%d]", fieldName, childCount);
+                }else  {
+                    return String.format("(%s)", dataType.name());
+                }
+            case OBJECT:
+                if (index >= 0) {
+                    return String.format("%d {%d}", index, childCount);
+                }else if (fieldName != null) {
+                    return String.format("%s {%d}", fieldName, childCount);
+                } else {
+                    return String.format("(%s)", dataType.name());
+                }
+            default:
+                if (index >= 0) {
+                    return String.format("[%d] %s", index, value);
+                } else if (fieldName != null) {
+                    return String.format("\"%s\": %s", fieldName, value);
+                } else {
+                    return String.format("%s",value);
                 }
         }
     }

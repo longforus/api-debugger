@@ -119,7 +119,6 @@ public class MainPanel extends JFrame {
         mBtnSend.addActionListener(e -> UIActionHandler.INSTANCE.onSend());
         mCbMethod.addItemListener(e -> UIActionHandler.INSTANCE.onMethodChanged(mCbMethod.getSelectedIndex()));
         mCbEncrypt.addItemListener(e -> UIActionHandler.INSTANCE.onEncryptTypeChanged(((IEncryptHandler) e.getItem()).getTypeCode()));
-
         mTpResponse.addMouseListener(new MouseInputAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {

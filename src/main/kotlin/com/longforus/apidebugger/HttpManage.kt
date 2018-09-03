@@ -49,7 +49,9 @@ object HttpManage {
                     val body = response.body() ?: return
                     val resStr = body.string()
                     val json = mGson.fromJson<JsonObject>(resStr,JsonObject::class.java )
-                    mainPanel.tpResponse.append(mGson.toJson(json,JsonObject::class.java))
+                    val jsonStr = mGson.toJson(json, JsonObject::class.java)
+                    MyValueHandler.curShowJsonStr = jsonStr
+                    mainPanel.tpResponse.append(jsonStr)
                     mainPanel.jep.setJson(resStr, JSONEditPanel.UpdateType.REPLACE)
                 } else {
                     mainPanel.tpInfo.append("on response but not success", Color.RED)

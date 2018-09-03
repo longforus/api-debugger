@@ -3,7 +3,9 @@ package com.longforus.apidebugger.ui;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonParser;
+import com.longforus.apidebugger.MyValueHandler;
 import java.awt.BorderLayout;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -11,6 +13,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
+import javax.swing.event.MouseInputAdapter;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
@@ -75,6 +78,16 @@ public class JSONEditPanel extends JPanel {
 	 */
 	public void addTreeSelectionListener(TreeSelectionListener tsl) {
 		jTree.addTreeSelectionListener(tsl);
+		jTree.addMouseListener(new MouseInputAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				super.mouseClicked(e);
+				if (e.getButton() == MouseEvent.BUTTON3) {
+					JSONJTreeNode component = (JSONJTreeNode) jTree.getLastSelectedPathComponent();
+					MyValueHandler.INSTANCE.setSysClipboardText(component.toSSearchStr());
+				}
+			}
+		});
 	}
 	
 	/**
