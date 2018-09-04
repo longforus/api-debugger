@@ -10,18 +10,22 @@ import okhttp3.RequestBody
  * Created by XQ Yang on 8/30/2018  5:13 PM.
  * Description :
  */
-class DefaultEncryptHandler:IEncryptHandler(){
-    override val typeCode: Int= 0
+class DefaultEncryptHandler : IEncryptHandler() {
+    override val typeCode: Int = 0
     override val title: String = "default"
 
 
     override fun onPostMethodEncrypt(params: Map<String, String>?, builder: Request.Builder, url: String): RequestBody {
+        val sb = StringBuilder("?")
         val encodingBuilder = FormBody.Builder()
         params?.forEach {
-            encodingBuilder.add(it.key,it.value)
+            encodingBuilder.add(it.key, it.value)
+            sb.append(it.key).append("=").append(it.value).append("&")
             mainPanel.tpInfo.append("key  =  ${it.key}   value =  ${it.value} \n")
         }
-       return encodingBuilder.build()
+        val resultUrl = url + if (sb.endsWith("?") || sb.endsWith("&")) sb.subSequence(0, sb.length - 1) else sb.toString()
+        mainPanel.tpInfo.append("Url :\n$resultUrl \n")
+        return encodingBuilder.build()
     }
 
     override fun onGetMethodEncrypt(params: Map<String, String>?, builder: Request.Builder, url: String) {
@@ -33,7 +37,7 @@ class DefaultEncryptHandler:IEncryptHandler(){
         }
         val resultUrl = url + if (sb.endsWith("?") || sb.endsWith("&")) sb.subSequence(0, sb.length - 1) else sb.toString()
         builder.url(resultUrl)
-        mainPanel.tpInfo.append(" url : $resultUrl \n")
+        mainPanel.tpInfo.append("Url :\n$resultUrl \n")
     }
 
 }

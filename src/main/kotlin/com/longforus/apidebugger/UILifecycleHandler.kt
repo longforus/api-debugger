@@ -45,13 +45,13 @@ object UILifecycleHandler {
         if (api == null) {
             mainPanel.cbEncrypt.selectedIndex = 0
             mainPanel.cbMethod.selectedIndex = 0
-            mainPanel.tbParame.model = DefaultTableModel(arrayOf( "key", "value"), MyValueHandler.PARAME_TABLE_ROW_COUNT)
+            mainPanel.tbParams.model = DefaultTableModel(arrayOf( "key", "value"), MyValueHandler.PARAME_TABLE_ROW_COUNT)
         } else {
             val id2Index = MyValueHandler.encryptId2Index(api.encryptType)
             mainPanel.cbEncrypt.selectedIndex = id2Index
             mainPanel.cbMethod.selectedIndex = api.method
             if (api.parameMap.isEmpty()) {
-                mainPanel.tbParame.model = DefaultTableModel(arrayOf( "key", "value"), MyValueHandler.PARAME_TABLE_ROW_COUNT)
+                mainPanel.tbParams.model = DefaultTableModel(arrayOf( "key", "value"), MyValueHandler.PARAME_TABLE_ROW_COUNT)
             } else {
 //                api.parameMap.entries.forEachIndexed { index, entry ->
 //                    mainPanel.tbParame.model.setValueAt(entry.key, index, 1)

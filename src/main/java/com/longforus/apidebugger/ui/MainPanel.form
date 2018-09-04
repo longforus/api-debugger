@@ -72,7 +72,7 @@
         <properties/>
         <border type="none" title="Request Parameter"/>
         <children>
-          <component id="f744b" class="javax.swing.JTable" binding="mTbParame">
+          <component id="f744b" class="javax.swing.JTable" binding="mTbParams">
             <constraints/>
             <properties>
               <rowHeight value="25"/>

@@ -42,14 +42,14 @@ import javax.swing.text.html.ParagraphView;
  */
 
 public class MainPanel extends JFrame {
-    private final MyTableModel mMyTableModel;
+    private MyTableModel mMyTableModel;
     private JComboBox mCbBaseUrl;
     private JButton mBtnSaveBaseUrl;
     private JComboBox mCbApiUrl;
     private JButton mBtnSend;
     private JComboBox mCbEncrypt;
     private JTextPane mTpResponse;
-    private JTable mTbParame;
+    private JTable mTbParams;
     private JTextPane mTpInfo;
     private JsonEditPanel mJep;
     private JButton mBtnSaveApi;
@@ -66,8 +66,8 @@ public class MainPanel extends JFrame {
         return mCbMethod;
     }
 
-    public JTable getTbParame() {
-        return mTbParame;
+    public JTable getTbParams() {
+        return mTbParams;
     }
 
     public MyTableModel getMyTableModel() {
@@ -117,8 +117,19 @@ public class MainPanel extends JFrame {
         mCbMethod.setModel(new DefaultComboBoxModel(new String[] { "POST", "GET" }));
         setContentPane(baseP);
         setJMenuBar(UILifecycleHandler.INSTANCE.getMenuBar());
-        mMyTableModel = new MyTableModel();
-        mTbParame.setModel(mMyTableModel);
+        initEvent();
+        initTextPanel();
+        mJep.jTree.setCellRenderer(new JsonTreeCellRenderer());
+        initTable();
+        pack();
+        Dimension screensize = Toolkit.getDefaultToolkit().getScreenSize();
+        int x = (int) screensize.getWidth() / 2 - baseP.getPreferredSize().width / 2;
+        int y = (int) screensize.getHeight() / 2 - baseP.getPreferredSize().height / 2 - 40;
+        setLocation(x, y);
+        setVisible(true);
+    }
+
+    private void initEvent() {
         mBtnSaveBaseUrl.addActionListener(e -> UIActionHandler.INSTANCE.onSaveBaseUrl(mCbBaseUrl.getModel().getSelectedItem()));
         btnDelUrl.addActionListener(e -> UIActionHandler.INSTANCE.onDelBaseUrl(mCbBaseUrl.getModel().getSelectedItem()));
         btnDelApi.addActionListener(e -> UIActionHandler.INSTANCE.onDelApiUrl((ApiBean) mCbApiUrl.getModel().getSelectedItem()));
@@ -128,6 +139,9 @@ public class MainPanel extends JFrame {
         mBtnSend.addActionListener(e -> UIActionHandler.INSTANCE.onSend());
         mCbMethod.addItemListener(e -> UIActionHandler.INSTANCE.onMethodChanged(mCbMethod.getSelectedIndex()));
         mCbEncrypt.addItemListener(e -> UIActionHandler.INSTANCE.onEncryptTypeChanged(((IEncryptHandler) e.getItem()).getTypeCode()));
+    }
+
+    private void initTextPanel() {
         mTpResponse.addMouseListener(new MouseInputAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -205,8 +219,12 @@ public class MainPanel extends JFrame {
         };
         mTpResponse.setEditorKit(editorKit);
         mTpInfo.setEditorKit(editorKit);
-        mJep.jTree.setCellRenderer(new JsonTreeCellRenderer());
-        mTbParame.addKeyListener(new KeyListener() {
+    }
+
+    private void initTable() {
+        mMyTableModel = new MyTableModel();
+        mTbParams.setModel(mMyTableModel);
+        mTbParams.addKeyListener(new KeyListener() {
             @Override
             public void keyTyped(KeyEvent e) {
 
@@ -220,27 +238,21 @@ public class MainPanel extends JFrame {
             @Override
             public void keyReleased(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_DELETE) {
-                    mMyTableModel.removeRow(mTbParame.getSelectedRow());
+                    mMyTableModel.removeRow(mTbParams.getSelectedRow());
                 }
             }
         });
-        mTbParame.getColumnModel().getColumn(0).setPreferredWidth(50);
-        mTbParame.getColumnModel().getColumn(1).setPreferredWidth(120);
-        mTbParame.getColumnModel().getColumn(2).setPreferredWidth(350);
+        mTbParams.getColumnModel().getColumn(0).setPreferredWidth(50);
+        mTbParams.getColumnModel().getColumn(1).setPreferredWidth(120);
+        mTbParams.getColumnModel().getColumn(2).setPreferredWidth(350);
         btnAddRow.addActionListener(e -> {
             mMyTableModel.addEmptyRow();
-            mTbParame.requestFocus();
+            mTbParams.requestFocus();
             int index = mMyTableModel.getRowCount() - 1;
-            mTbParame.setRowSelectionInterval(index, index);//最后一行获得焦点
-            mTbParame.editCellAt(index, 1);
+            mTbParams.setRowSelectionInterval(index, index);//最后一行获得焦点
+            mTbParams.editCellAt(index, 1);
         });
-        btnDelRow.addActionListener(e -> mMyTableModel.removeRow(mTbParame.getSelectedRow()));
-        pack();
-        Dimension screensize = Toolkit.getDefaultToolkit().getScreenSize();
-        int x = (int) screensize.getWidth() / 2 - baseP.getPreferredSize().width / 2;
-        int y = (int) screensize.getHeight() / 2 - baseP.getPreferredSize().height / 2 - 40;
-        setLocation(x, y);
-        setVisible(true);
+        btnDelRow.addActionListener(e -> mMyTableModel.removeRow(mTbParams.getSelectedRow()));
     }
 
     private void createUIComponents() {
@@ -262,7 +274,7 @@ public class MainPanel extends JFrame {
     }
 
     public int getCurEncryptCode() {
-        return mCbMethod.getSelectedIndex();
+        return mCbEncrypt.getSelectedIndex();
     }
 
     public String getCurBaseUrl() {
@@ -299,9 +311,9 @@ public class MainPanel extends JFrame {
         final JScrollPane scrollPane1 = new JScrollPane();
         baseP.add(scrollPane1, cc.xyw(1, 8, 11, CellConstraints.FILL, CellConstraints.FILL));
         scrollPane1.setBorder(BorderFactory.createTitledBorder("Request Parameter"));
-        mTbParame = new JTable();
-        mTbParame.setRowHeight(25);
-        scrollPane1.setViewportView(mTbParame);
+        mTbParams = new JTable();
+        mTbParams.setRowHeight(25);
+        scrollPane1.setViewportView(mTbParams);
         final JScrollPane scrollPane2 = new JScrollPane();
         scrollPane2.setHorizontalScrollBarPolicy(31);
         baseP.add(scrollPane2, cc.xyw(1, 12, 11, CellConstraints.FILL, CellConstraints.FILL));

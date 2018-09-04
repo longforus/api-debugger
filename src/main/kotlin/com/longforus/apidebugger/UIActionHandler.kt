@@ -31,7 +31,7 @@ object UIActionHandler {
                 apiBean = ApiBean(selectedItem, it.id)
                 apiBean.encryptType = mainPanel.selectedEncryptID
                 apiBean.method = mainPanel.selectedMethodType
-                apiBean.parameMap = getParameMap(mainPanel.tbParame)
+                apiBean.parameMap = getParameMap(mainPanel.tbParams)
                 it.apis.add(0, apiBean)
                 val model = mainPanel.cbApiUrl.model as DefaultComboBoxModel
                 model.insertElementAt(apiBean, 0)
@@ -40,7 +40,7 @@ object UIActionHandler {
                 apiBean = selectedItem as ApiBean
                 apiBean.encryptType = mainPanel.selectedEncryptID
                 apiBean.method = mainPanel.selectedMethodType
-                apiBean.parameMap = getParameMap(mainPanel.tbParame)
+                apiBean.parameMap = getParameMap(mainPanel.tbParams)
             }
             OB.apiBox.put(apiBean)
         }

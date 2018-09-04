@@ -24,7 +24,7 @@ object HttpManage {
 
 
     fun sendRequest() {
-        val request = buildRequest(getAbsoluteUrl(mainPanel.curApiUrl), UIActionHandler.getParameMap(mainPanel.tbParame,false), mainPanel.curMethod, mainPanel.curEncryptCode)
+        val request = buildRequest(getAbsoluteUrl(mainPanel.curApiUrl), UIActionHandler.getParameMap(mainPanel.tbParams,false), mainPanel.curMethod, mainPanel.curEncryptCode)
         doRequest(request)
     }
 
