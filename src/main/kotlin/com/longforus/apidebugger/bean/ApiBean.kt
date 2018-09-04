@@ -27,6 +27,20 @@ var id: Long = 0,
 
 
 
+    companion object {
+        fun getTableVlaueList(bean:ApiBean):MutableList<TableBean>{
+            if (bean.parameMap.isEmpty()) {
+                return mutableListOf()
+            }
+            val list = mutableListOf<TableBean>()
+            bean.parameMap.forEach {
+                list.add(TableBean(true,it.key,it.value))
+            }
+            return list
+        }
+    }
+
+
     override fun toString(): String {
         return url
     }

@@ -16,6 +16,8 @@ import javax.swing.table.DefaultTableModel
  */
 object UILifecycleHandler {
 
+    val cacheMenu = mutableMapOf<String,JMenuItem>()
+
     fun onResume(mainPanel: MainPanel) {
         mainPanel.cbEncrypt.model = DefaultComboBoxModel(MyValueHandler.encryptImplList.toTypedArray())
         val allProject = OB.projectBox.query().build().find()
@@ -32,14 +34,17 @@ object UILifecycleHandler {
         }
         val apis = it.apis
         mainPanel.cbApiUrl.model = DefaultComboBoxModel(apis.toTypedArray())
-        if (apis.isNotEmpty()) {
-            curApi = apis[0]
+        curApi = if (apis.isNotEmpty()) {
+            apis[0]
+        } else {
+            null
         }
     }
 
     fun initApi(api: ApiBean?){
         if (api == null) {
             mainPanel.cbEncrypt.selectedIndex = 0
+            mainPanel.cbMethod.selectedIndex = 0
             mainPanel.tbParame.model = DefaultTableModel(arrayOf( "key", "value"), MyValueHandler.PARAME_TABLE_ROW_COUNT)
         } else {
             val id2Index = MyValueHandler.encryptId2Index(api.encryptType)
@@ -48,10 +53,11 @@ object UILifecycleHandler {
             if (api.parameMap.isEmpty()) {
                 mainPanel.tbParame.model = DefaultTableModel(arrayOf( "key", "value"), MyValueHandler.PARAME_TABLE_ROW_COUNT)
             } else {
-                api.parameMap.entries.forEachIndexed { index, entry ->
-                    mainPanel.tbParame.model.setValueAt(entry.key, index, 0)
-                    mainPanel.tbParame.model.setValueAt(entry.value, index, 1)
-                }
+//                api.parameMap.entries.forEachIndexed { index, entry ->
+//                    mainPanel.tbParame.model.setValueAt(entry.key, index, 1)
+//                    mainPanel.tbParame.model.setValueAt(entry.value, index, 2)
+//                }
+                mainPanel.myTableModel.data = ApiBean.getTableVlaueList(api)
             }
         }
     }
@@ -74,25 +80,33 @@ object UILifecycleHandler {
             } else {
                 val project = ProjectBean()
                 project.name = projectName
+                val newPro = JMenuItem(projectName)
+                cacheMenu[projectName] = newPro
+                newPro.addActionListener {_->
+                    curProject = project
+                }
+                pm.insert(newPro,2)
                 OB.projectBox.put(project)
                 curProject = project
             }
         }
         pm.add(item)
         pm.addSeparator()
-        OB.projectBox.query().build().find().forEach {pro->
+        OB.projectBox.query().build().find().sortedByDescending { it.id }.forEach {pro->
             val tempItem = JMenuItem(pro.name)
+            cacheMenu[pro.name] = tempItem
             tempItem.addActionListener {
                 curProject = pro
             }
             pm.add(tempItem)
         }
         pm.addSeparator()
-
         val deleteItem = JMenuItem("delete current open project")
         deleteItem.addActionListener {
             if (curProject != null) {
                 OB.projectBox.remove(curProject)
+                val jMenuItem = cacheMenu.remove(curProject?.name)
+                pm.remove(jMenuItem)
                 val mutableList = OB.projectBox.query().build().find()
                 if (mutableList.isNotEmpty()) {
                     val last = mutableList.last()

@@ -11,6 +11,8 @@ import com.longforus.apidebugger.encrypt.IEncryptHandler;
 import java.awt.Dimension;
 import java.awt.HeadlessException;
 import java.awt.Toolkit;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
@@ -27,7 +29,6 @@ import javax.swing.JTable;
 import javax.swing.JTextPane;
 import javax.swing.SizeRequirements;
 import javax.swing.event.MouseInputAdapter;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.text.Element;
 import javax.swing.text.View;
 import javax.swing.text.ViewFactory;
@@ -41,6 +42,7 @@ import javax.swing.text.html.ParagraphView;
  */
 
 public class MainPanel extends JFrame {
+    private final MyTableModel mMyTableModel;
     private JComboBox mCbBaseUrl;
     private JButton mBtnSaveBaseUrl;
     private JComboBox mCbApiUrl;
@@ -57,6 +59,8 @@ public class MainPanel extends JFrame {
     private JButton btnDelUrl;
     private JButton btnDelApi;
     private JComboBox mCbMethod;
+    private JButton btnAddRow;
+    private JButton btnDelRow;
 
     public JComboBox getCbMethod() {
         return mCbMethod;
@@ -64,6 +68,10 @@ public class MainPanel extends JFrame {
 
     public JTable getTbParame() {
         return mTbParame;
+    }
+
+    public MyTableModel getMyTableModel() {
+        return mMyTableModel;
     }
 
     public JComboBox getCbEncrypt() {
@@ -99,7 +107,7 @@ public class MainPanel extends JFrame {
     }
 
     public int getSelectedMethodType() {
-        return MyValueHandler.INSTANCE.encryptIndex2Id(mCbEncrypt.getSelectedIndex());
+        return mCbMethod.getSelectedIndex();
     }
 
     public MainPanel(String title) throws HeadlessException {
@@ -109,7 +117,8 @@ public class MainPanel extends JFrame {
         mCbMethod.setModel(new DefaultComboBoxModel(new String[] { "POST", "GET" }));
         setContentPane(baseP);
         setJMenuBar(UILifecycleHandler.INSTANCE.getMenuBar());
-        mTbParame.setModel(new DefaultTableModel(new Object[] { "key", "value" }, MyValueHandler.PARAME_TABLE_ROW_COUNT));
+        mMyTableModel = new MyTableModel();
+        mTbParame.setModel(mMyTableModel);
         mBtnSaveBaseUrl.addActionListener(e -> UIActionHandler.INSTANCE.onSaveBaseUrl(mCbBaseUrl.getModel().getSelectedItem()));
         btnDelUrl.addActionListener(e -> UIActionHandler.INSTANCE.onDelBaseUrl(mCbBaseUrl.getModel().getSelectedItem()));
         btnDelApi.addActionListener(e -> UIActionHandler.INSTANCE.onDelApiUrl((ApiBean) mCbApiUrl.getModel().getSelectedItem()));
@@ -147,7 +156,7 @@ public class MainPanel extends JFrame {
             }
         });
         //支持自动换行
-        mTpResponse.setEditorKit(new HTMLEditorKit() {
+        HTMLEditorKit editorKit = new HTMLEditorKit() {
             @Override
             public ViewFactory getViewFactory() {
 
@@ -193,9 +202,39 @@ public class MainPanel extends JFrame {
                     }
                 };
             }
-        });
-
+        };
+        mTpResponse.setEditorKit(editorKit);
+        mTpInfo.setEditorKit(editorKit);
         mJep.jTree.setCellRenderer(new JsonTreeCellRenderer());
+        mTbParame.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_DELETE) {
+                    mMyTableModel.removeRow(mTbParame.getSelectedRow());
+                }
+            }
+        });
+        mTbParame.getColumnModel().getColumn(0).setPreferredWidth(50);
+        mTbParame.getColumnModel().getColumn(1).setPreferredWidth(120);
+        mTbParame.getColumnModel().getColumn(2).setPreferredWidth(350);
+        btnAddRow.addActionListener(e -> {
+            mMyTableModel.addEmptyRow();
+            mTbParame.requestFocus();
+            int index = mMyTableModel.getRowCount() - 1;
+            mTbParame.setRowSelectionInterval(index, index);//最后一行获得焦点
+            mTbParame.editCellAt(index, 1);
+        });
+        btnDelRow.addActionListener(e -> mMyTableModel.removeRow(mTbParame.getSelectedRow()));
         pack();
         Dimension screensize = Toolkit.getDefaultToolkit().getScreenSize();
         int x = (int) screensize.getWidth() / 2 - baseP.getPreferredSize().width / 2;
@@ -214,6 +253,22 @@ public class MainPanel extends JFrame {
         OB.INSTANCE.onExit();
     }
 
+    public String getCurApiUrl() {
+        return mCbApiUrl.getSelectedItem().toString();
+    }
+
+    public int getCurMethod() {
+        return mCbMethod.getSelectedIndex();
+    }
+
+    public int getCurEncryptCode() {
+        return mCbMethod.getSelectedIndex();
+    }
+
+    public String getCurBaseUrl() {
+        return (String) mCbBaseUrl.getSelectedItem();
+    }
+
     /**
      * Method generated by IntelliJ IDEA GUI Designer
      * >>> IMPORTANT!! <<<
@@ -226,9 +281,9 @@ public class MainPanel extends JFrame {
         baseP = new JPanel();
         baseP.setLayout(new FormLayout(
             "fill:d:noGrow,left:4dlu:noGrow,fill:300px:noGrow,left:4dlu:noGrow,fill:d:noGrow,left:4dlu:noGrow,fill:max(d;4px):noGrow,left:4dlu:noGrow,fill:d:noGrow," +
-                "left:4dlu:noGrow,fill:d:noGrow,left:4dlu:noGrow,fill:max(p;600px):grow",
+                "left:4dlu:noGrow,fill:d:noGrow,left:4dlu:noGrow,fill:600px:grow",
             "center:d:noGrow,center:max(d;4px):noGrow,top:4dlu:noGrow,center:max(d;4px):noGrow,top:4dlu:noGrow,center:max(d;4px):noGrow,top:4dlu:noGrow,center:200px:noGrow," +
-                "top:4dlu:noGrow,center:max(p;600px):grow,center:max(d;4px):noGrow"));
+                "top:4dlu:noGrow,center:max(d;4px):noGrow,top:4dlu:noGrow,center:max(p;600px):grow,center:max(d;4px):noGrow"));
         baseP.setName("Api debugger");
         baseP.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1), null));
         final JLabel label1 = new JLabel();
@@ -249,20 +304,20 @@ public class MainPanel extends JFrame {
         scrollPane1.setViewportView(mTbParame);
         final JScrollPane scrollPane2 = new JScrollPane();
         scrollPane2.setHorizontalScrollBarPolicy(31);
-        baseP.add(scrollPane2, cc.xyw(1, 10, 11, CellConstraints.FILL, CellConstraints.FILL));
+        baseP.add(scrollPane2, cc.xyw(1, 12, 11, CellConstraints.FILL, CellConstraints.FILL));
         scrollPane2.setBorder(BorderFactory.createTitledBorder("Response"));
         mTpResponse = new JTextPane();
         mTpResponse.setPreferredSize(new Dimension(500, 600));
         scrollPane2.setViewportView(mTpResponse);
         lbStatus = new JLabel();
         lbStatus.setText("Status:");
-        baseP.add(lbStatus, cc.xyw(1, 11, 11));
+        baseP.add(lbStatus, cc.xyw(1, 13, 11));
         final JScrollPane scrollPane3 = new JScrollPane();
         baseP.add(scrollPane3, cc.xywh(13, 1, 1, 8, CellConstraints.FILL, CellConstraints.FILL));
         scrollPane3.setBorder(BorderFactory.createTitledBorder("Request Information"));
         mTpInfo = new JTextPane();
         scrollPane3.setViewportView(mTpInfo);
-        baseP.add(mJep, cc.xywh(13, 9, 1, 2));
+        baseP.add(mJep, cc.xywh(13, 9, 1, 4));
         mJep.setBorder(BorderFactory.createTitledBorder("Json Tree"));
         final JLabel label2 = new JLabel();
         label2.setText("Encryption:");
@@ -295,6 +350,12 @@ public class MainPanel extends JFrame {
         mBtnSend = new JButton();
         mBtnSend.setText("Send");
         baseP.add(mBtnSend, cc.xy(11, 6));
+        btnAddRow = new JButton();
+        btnAddRow.setText("Add Row");
+        baseP.add(btnAddRow, cc.xyw(1, 10, 3));
+        btnDelRow = new JButton();
+        btnDelRow.setText("Delete Selected Row");
+        baseP.add(btnDelRow, cc.xyw(5, 10, 7));
     }
 
     /** @noinspection ALL */

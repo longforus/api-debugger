@@ -12,7 +12,7 @@ import javax.swing.text.StyleConstants
  * Created by XQ Yang on 8/30/2018  3:05 PM.
  * Description :
  */
-fun JTextPane.append(str:String,color: Color? = null){
+fun JTextPane.append(str:String,color: Color? = null,autoScroll:Boolean = true){
     val doc = this.document
     if (doc != null) {
         try {
@@ -23,6 +23,9 @@ fun JTextPane.append(str:String,color: Color? = null){
                 StyleConstants.setBold(attr, true)
             }
             doc.insertString(doc.length, str, attr)
+            if (autoScroll) {
+                this.caretPosition = this.styledDocument.length
+            }
         } catch (e: BadLocationException) {
         }
 

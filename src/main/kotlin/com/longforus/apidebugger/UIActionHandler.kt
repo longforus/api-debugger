@@ -46,13 +46,15 @@ object UIActionHandler {
         }
     }
 
-    fun getParameMap(jTable: JTable): Map<String, String> {
+    fun getParameMap(jTable: JTable, isSave: Boolean = true): Map<String, String> {
         val map = HashMap<String, String>()
         for (i in 0..jTable.rowCount) {
-            if (jTable.getValueAt(i, 0) == null) {
+            if (jTable.getValueAt(i, 1) == null) {
                 break
             }
-            map[jTable.getValueAt(i, 0) as String] = jTable.getValueAt(i, 1) as String
+            if (jTable.getValueAt(i, 0) as Boolean || isSave) {
+                map[jTable.getValueAt(i, 1) as String] = jTable.getValueAt(i, 2) as String
+            }
         }
         return map
     }
@@ -63,16 +65,13 @@ object UIActionHandler {
             OB.apiBox.put(it)
             MyValueHandler.curProject?.apis?.add(it)
             MyValueHandler.curApi = it
-            mainPanel.cbApiUrl.insertItemAt(it,0)
-            mainPanel.cbApiUrl.selectedIndex=0
+            mainPanel.cbApiUrl.insertItemAt(it, 0)
+            mainPanel.cbApiUrl.selectedIndex = 0
         }
     }
 
     fun onSend() {
-        val api = MyValueHandler.curApi
-        api?.let {
-            HttpManage.sendRequest(api)
-        }
+        HttpManage.sendRequest()
     }
 
     fun onDelBaseUrl(selectedItem: Any) {
@@ -93,16 +92,20 @@ object UIActionHandler {
     }
 
     fun onMethodChanged(index: Int) {
-        if (MyValueHandler.curApi?.method!=index) {
+        if (MyValueHandler.curApi?.method != index) {
             MyValueHandler.curApi?.method = index
-            OB.apiBox.put(MyValueHandler.curApi)
+            if (MyValueHandler.curApi != null) {
+                OB.apiBox.put(MyValueHandler.curApi)
+            }
         }
     }
 
     fun onEncryptTypeChanged(typeCode: Int) {
-        if (MyValueHandler.curApi?.encryptType!=typeCode) {
+        if (MyValueHandler.curApi?.encryptType != typeCode) {
             MyValueHandler.curApi?.encryptType = typeCode
-            OB.apiBox.put(MyValueHandler.curApi)
+            if (MyValueHandler.curApi != null) {
+                OB.apiBox.put(MyValueHandler.curApi)
+            }
         }
     }
 }

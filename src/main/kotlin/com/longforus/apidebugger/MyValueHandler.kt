@@ -21,7 +21,7 @@ object MyValueHandler {
 
 
     val encryptImplList = listOf<IEncryptHandler>(kzEncryptHandler(), DefaultEncryptHandler())
-    val mGson =GsonBuilder().setPrettyPrinting().create()
+    val mGson =GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create()
 
     var curProject: ProjectBean? = null
         set(value) {
