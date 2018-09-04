@@ -3,7 +3,7 @@ package com.longforus.apidebugger
 import com.google.gson.JsonObject
 import com.longforus.apidebugger.MyValueHandler.mGson
 import com.longforus.apidebugger.bean.ApiBean
-import com.longforus.apidebugger.ui.JSONEditPanel
+import com.longforus.apidebugger.ui.JsonEditPanel
 import com.longforus.apidebugger.ui.MainPanel
 import okhttp3.*
 import java.awt.Color
@@ -52,7 +52,7 @@ object HttpManage {
                     val jsonStr = mGson.toJson(json, JsonObject::class.java)
                     MyValueHandler.curShowJsonStr = jsonStr
                     mainPanel.tpResponse.append(jsonStr)
-                    mainPanel.jep.setJson(resStr, JSONEditPanel.UpdateType.REPLACE)
+                    mainPanel.jep.setJson(resStr, JsonEditPanel.UpdateType.REPLACE)
                 } else {
                     mainPanel.tpInfo.append("on response but not success", Color.RED)
                     mainPanel.tpInfo.append("code = ${response.code()}  ", Color.RED)

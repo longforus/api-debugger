@@ -56,3 +56,4 @@ fastlane/Preview.html
 fastlane/screenshots
 fastlane/test_output
 fastlane/readme.md
+src/main/kotlin/com/longforus/apidebugger/encrypt/kzEncryptHandler.kt

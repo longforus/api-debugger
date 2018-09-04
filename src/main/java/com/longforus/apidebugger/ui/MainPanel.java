@@ -49,7 +49,7 @@ public class MainPanel extends JFrame {
     private JTextPane mTpResponse;
     private JTable mTbParame;
     private JTextPane mTpInfo;
-    private JSONEditPanel mJep;
+    private JsonEditPanel mJep;
     private JButton mBtnSaveApi;
     private JButton mBtnNewApi;
     private JLabel lbStatus;
@@ -70,7 +70,7 @@ public class MainPanel extends JFrame {
         return mCbEncrypt;
     }
 
-    public JSONEditPanel getJep() {
+    public JsonEditPanel getJep() {
         return mJep;
     }
 
@@ -127,7 +127,7 @@ public class MainPanel extends JFrame {
                     JPopupMenu menu = new JPopupMenu("Clear");
                     JMenuItem clear1 = menu.add(new JMenuItem("clear"));
                     clear1.addActionListener(e1 -> {
-                        mJep.setJson("{}", JSONEditPanel.UpdateType.REPLACE);
+                        mJep.setJson("{}", JsonEditPanel.UpdateType.REPLACE);
                         mTpResponse.setText("");
                     });
                     menu.show(mTpResponse, e.getX(), e.getY());
@@ -194,17 +194,18 @@ public class MainPanel extends JFrame {
                 };
             }
         });
+
         mJep.jTree.setCellRenderer(new JsonTreeCellRenderer());
         pack();
         Dimension screensize = Toolkit.getDefaultToolkit().getScreenSize();
         int x = (int) screensize.getWidth() / 2 - baseP.getPreferredSize().width / 2;
-        int y = (int) screensize.getHeight() / 2 - baseP.getPreferredSize().height / 2 - 20;
+        int y = (int) screensize.getHeight() / 2 - baseP.getPreferredSize().height / 2 - 40;
         setLocation(x, y);
         setVisible(true);
     }
 
     private void createUIComponents() {
-        mJep = new JSONEditPanel();
+        mJep = new JsonEditPanel();
     }
 
     @Override

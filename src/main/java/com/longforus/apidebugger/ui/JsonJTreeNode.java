@@ -37,7 +37,7 @@ import org.apache.commons.lang3.StringUtils;
  * limitations under the License.
  * </p>
  */
-public class JSONJTreeNode extends DefaultMutableTreeNode {
+public class JsonJTreeNode extends DefaultMutableTreeNode {
     /**
      * Using default serial id.
      */
@@ -65,7 +65,7 @@ public class JSONJTreeNode extends DefaultMutableTreeNode {
      * @param index - index of element in the array or -1 if not part of an array
      * @param jsonElement - element to represent
      */
-    public JSONJTreeNode(String fieldName, int index, JsonElement jsonElement) {
+    public JsonJTreeNode(String fieldName, int index, JsonElement jsonElement) {
         this.index = index;
         this.fieldName = fieldName;
         if (jsonElement.isJsonArray()) {
@@ -96,7 +96,7 @@ public class JSONJTreeNode extends DefaultMutableTreeNode {
                 Iterator<JsonElement> it = array.iterator();
                 while (it.hasNext()) {
                     JsonElement element = it.next();
-                    JSONJTreeNode childNode = new JSONJTreeNode(null, index, element);
+                    JsonJTreeNode childNode = new JsonJTreeNode(null, index, element);
                     this.add(childNode);
                     index++;
                 }
@@ -105,7 +105,7 @@ public class JSONJTreeNode extends DefaultMutableTreeNode {
                 JsonObject object = myJsonElement.getAsJsonObject();
                 childCount = object.size();
                 for (Entry<String, JsonElement> entry : object.entrySet()) {
-                    JSONJTreeNode childNode = new JSONJTreeNode(entry.getKey(), -1, entry.getValue());
+                    JsonJTreeNode childNode = new JsonJTreeNode(entry.getKey(), -1, entry.getValue());
                     this.add(childNode);
                 }
                 break;
@@ -168,7 +168,7 @@ public class JSONJTreeNode extends DefaultMutableTreeNode {
 
     private void processNode(StringBuilder sb, Enumeration children) {
         while (children.hasMoreElements()) {
-            JSONJTreeNode child = (JSONJTreeNode) children.nextElement();
+            JsonJTreeNode child = (JsonJTreeNode) children.nextElement();
             child.buildJsonString(sb);
             if (children.hasMoreElements()) {
                 sb.append(",");

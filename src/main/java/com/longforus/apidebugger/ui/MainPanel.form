@@ -26,7 +26,7 @@
     <colspec value="left:4dlu:noGrow"/>
     <colspec value="fill:max(p;600px):grow"/>
     <constraints>
-      <xy x="20" y="20" width="1375" height="959"/>
+      <xy x="20" y="20" width="1375" height="981"/>
     </constraints>
     <properties>
       <name value="Api debugger"/>
@@ -119,7 +119,7 @@
           </component>
         </children>
       </scrollpane>
-      <grid id="5f8bc" class="com.longforus.apidebugger.ui.JSONEditPanel" binding="mJep" custom-create="true" layout-manager="FormLayout">
+      <grid id="5f8bc" class="com.longforus.apidebugger.ui.JsonEditPanel" binding="mJep" custom-create="true" layout-manager="FormLayout">
         <rowspec value="center:d:grow"/>
         <colspec value="fill:d:grow"/>
         <constraints>
