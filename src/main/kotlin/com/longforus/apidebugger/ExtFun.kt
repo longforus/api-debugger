@@ -33,5 +33,5 @@ fun JTextPane.append(str:String,color: Color? = null,autoScroll:Boolean = true){
 }
 
 fun showErrorMsg(msg:String){
-    JOptionPane.showMessageDialog(null, msg,"Error", JOptionPane.ERROR)
+    JOptionPane.showMessageDialog(null, msg,"Error", JOptionPane.ERROR_MESSAGE)
 }

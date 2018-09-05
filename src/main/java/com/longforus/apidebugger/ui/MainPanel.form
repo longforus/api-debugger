@@ -80,7 +80,7 @@
       </scrollpane>
       <scrollpane id="86e31">
         <constraints>
-          <grid row="9" column="0" row-span="1" col-span="11" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <grid row="9" column="0" row-span="1" col-span="13" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
           <forms defaultalign-horz="false" defaultalign-vert="false"/>
         </constraints>
         <properties>
@@ -88,11 +88,8 @@
         </properties>
         <border type="none" title="Response"/>
         <children>
-          <component id="368c1" class="javax.swing.JTextPane" binding="mTpResponse">
+          <component id="61514" class="com.teamdev.jxbrowser.chromium.swing.BrowserView" binding="mBrowserView1" custom-create="true" default-binding="true">
             <constraints/>
-            <properties>
-              <preferredSize width="500" height="600"/>
-            </properties>
           </component>
         </children>
       </scrollpane>
@@ -119,17 +116,6 @@
           </component>
         </children>
       </scrollpane>
-      <grid id="5f8bc" class="com.longforus.apidebugger.ui.JsonEditPanel" binding="mJep" custom-create="true" layout-manager="FormLayout">
-        <rowspec value="center:d:grow"/>
-        <colspec value="fill:d:grow"/>
-        <constraints>
-          <grid row="7" column="12" row-span="3" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
-          <forms/>
-        </constraints>
-        <properties/>
-        <border type="none" title="Json Tree"/>
-        <children/>
-      </grid>
       <component id="a1a29" class="javax.swing.JComboBox" binding="mCbEncrypt">
         <constraints>
           <grid row="1" column="10" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>

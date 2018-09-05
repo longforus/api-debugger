@@ -2,7 +2,6 @@ package com.longforus.apidebugger
 
 import com.google.gson.JsonObject
 import com.longforus.apidebugger.MyValueHandler.mGson
-import com.longforus.apidebugger.ui.JsonEditPanel
 import com.longforus.apidebugger.ui.MainPanel
 import okhttp3.*
 import java.awt.Color
@@ -38,7 +37,6 @@ object HttpManage {
 //                val byteArrayOutputStream = ByteArrayOutputStream()
 //                val ps = PrintStream(byteArrayOutputStream)
 //                e.printStackTrace(ps)
-                mainPanel.tpResponse.append(e.toString() + "\n",autoScroll = false)
 
                 mainPanel.tpInfo.append("consuming: ${System.currentTimeMillis() - startTime}ms \n ", Color.BLUE)
 
@@ -56,9 +54,7 @@ object HttpManage {
                     val json = mGson.fromJson<JsonObject>(resStr, JsonObject::class.java)
                     val jsonStr =  mGson.toJson(json, JsonObject::class.java)
                     MyValueHandler.curShowJsonStr = jsonStr
-                    mainPanel.tpResponse.text = ""
-                    mainPanel.tpResponse.append(jsonStr,autoScroll = false)
-                    mainPanel.jep.setJson(resStr, JsonEditPanel.UpdateType.REPLACE)
+
                 } else {
                     mainPanel.tpInfo.append("\non response but not success\n", Color.RED)
                     mainPanel.tpInfo.append("code = ${response.code()} \n ", Color.RED)

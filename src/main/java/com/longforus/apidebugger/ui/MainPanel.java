@@ -2,12 +2,16 @@ package com.longforus.apidebugger.ui;
 
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
+import com.longforus.apidebugger.ExtFunKt;
 import com.longforus.apidebugger.MyValueHandler;
 import com.longforus.apidebugger.OB;
 import com.longforus.apidebugger.UIActionHandler;
 import com.longforus.apidebugger.UILifecycleHandler;
 import com.longforus.apidebugger.bean.ApiBean;
 import com.longforus.apidebugger.encrypt.IEncryptHandler;
+import com.teamdev.jxbrowser.chromium.Browser;
+import com.teamdev.jxbrowser.chromium.BrowserException;
+import com.teamdev.jxbrowser.chromium.swing.BrowserView;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.HeadlessException;
@@ -50,10 +54,8 @@ public class MainPanel extends JFrame {
     private JComboBox mCbApiUrl;
     private JButton mBtnSend;
     private JComboBox mCbEncrypt;
-    private JTextPane mTpResponse;
     private JTable mTbParams;
     private JTextPane mTpInfo;
-    private JsonEditPanel mJep;
     private JButton mBtnSaveApi;
     private JButton mBtnNewApi;
     private JLabel lbStatus;
@@ -64,6 +66,8 @@ public class MainPanel extends JFrame {
     private JButton btnAddRow;
     private JButton btnDelRow;
     private JButton btnClear;
+    private BrowserView mBrowserView1;
+    private Browser mBrowser;
 
     public JComboBox getCbMethod() {
         return mCbMethod;
@@ -81,16 +85,8 @@ public class MainPanel extends JFrame {
         return mCbEncrypt;
     }
 
-    public JsonEditPanel getJep() {
-        return mJep;
-    }
-
     public JLabel getLbStatus() {
         return lbStatus;
-    }
-
-    public JTextPane getTpResponse() {
-        return mTpResponse;
     }
 
     public JTextPane getTpInfo() {
@@ -124,7 +120,6 @@ public class MainPanel extends JFrame {
         //mCbApiUrl.setRenderer(new DeleteBtnComboBoxRenderer(o -> UIActionHandler.INSTANCE.onDelApiUrl((ApiBean) o)));
         //mCbBaseUrl.setRenderer(new DeleteBtnComboBoxRenderer(UIActionHandler.INSTANCE :: onDelBaseUrl));
         initTextPanel();
-        mJep.jTree.setCellRenderer(new JsonTreeCellRenderer());
         initTable();
         pack();
         Dimension screensize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -132,6 +127,17 @@ public class MainPanel extends JFrame {
         int y = 0;
         setLocation(x, y);
         setVisible(true);
+        String resource = getClass().getResource("").getPath();
+        int index = resource.indexOf(".jar");
+        String path;
+        if (index > 0) {
+            int last = resource.lastIndexOf("/", index);
+            path = resource.substring(0, last) + "/jsonView/index.html";
+        } else {//debug model
+            path = resource.substring(1) + "/jsonView/index.html";
+        }
+        mBrowser.loadURL(path);
+        mBrowser.executeJavaScript("app.setData('123')");
     }
 
     private void initEvent() {
@@ -152,23 +158,7 @@ public class MainPanel extends JFrame {
     }
 
     private void initTextPanel() {
-        mTpResponse.addMouseListener(new MouseInputAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                super.mouseClicked(e);
-                if (e.getButton() == MouseEvent.BUTTON3) {
-                    JPopupMenu menu = new JPopupMenu("Clear");
-                    JMenuItem clear1 = menu.add(new JMenuItem("clear"));
-                    JMenuItem copyAll = menu.add(new JMenuItem("copy all"));
-                    clear1.addActionListener(e1 -> {
-                        mJep.setJson("{}", JsonEditPanel.UpdateType.REPLACE);
-                        mTpResponse.setText("");
-                    });
-                    copyAll.addActionListener(e1 -> MyValueHandler.INSTANCE.setSysClipboardText(MyValueHandler.INSTANCE.getCurShowJsonStr()));
-                    menu.show(mTpResponse, e.getX(), e.getY());
-                }
-            }
-        });
+
         mTpInfo.addMouseListener(new MouseInputAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -229,7 +219,6 @@ public class MainPanel extends JFrame {
                 };
             }
         };
-        mTpResponse.setEditorKit(editorKit);
         mTpInfo.setEditorKit(editorKit);
     }
 
@@ -272,7 +261,12 @@ public class MainPanel extends JFrame {
     }
 
     private void createUIComponents() {
-        mJep = new JsonEditPanel();
+        try {
+            mBrowser = new Browser();
+        } catch (BrowserException e) {
+            ExtFunKt.showErrorMsg("already been opened !!!");
+        }
+        mBrowserView1 = new BrowserView(mBrowser);
     }
 
     @Override
@@ -332,11 +326,9 @@ public class MainPanel extends JFrame {
         scrollPane1.setViewportView(mTbParams);
         final JScrollPane scrollPane2 = new JScrollPane();
         scrollPane2.setHorizontalScrollBarPolicy(31);
-        baseP.add(scrollPane2, cc.xyw(1, 10, 11, CellConstraints.FILL, CellConstraints.FILL));
+        baseP.add(scrollPane2, cc.xyw(1, 10, 13, CellConstraints.FILL, CellConstraints.FILL));
         scrollPane2.setBorder(BorderFactory.createTitledBorder("Response"));
-        mTpResponse = new JTextPane();
-        mTpResponse.setPreferredSize(new Dimension(500, 600));
-        scrollPane2.setViewportView(mTpResponse);
+        scrollPane2.setViewportView(mBrowserView1);
         lbStatus = new JLabel();
         lbStatus.setText("Status:");
         baseP.add(lbStatus, cc.xyw(1, 11, 11));
@@ -345,8 +337,6 @@ public class MainPanel extends JFrame {
         scrollPane3.setBorder(BorderFactory.createTitledBorder("Request Information"));
         mTpInfo = new JTextPane();
         scrollPane3.setViewportView(mTpInfo);
-        baseP.add(mJep, cc.xywh(13, 8, 1, 3));
-        mJep.setBorder(BorderFactory.createTitledBorder("Json Tree"));
         mCbEncrypt = new JComboBox();
         baseP.add(mCbEncrypt, cc.xy(11, 2));
         btnDelUrl = new JButton();

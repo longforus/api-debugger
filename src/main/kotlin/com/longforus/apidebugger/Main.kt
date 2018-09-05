@@ -2,7 +2,6 @@ package com.longforus.apidebugger
 
 import com.longforus.apidebugger.ui.MainPanel
 import com.teamdev.jxbrowser.chromium.az
-import java.awt.Component
 import java.awt.EventQueue
 import java.lang.reflect.Field
 import java.lang.reflect.Modifier
@@ -24,8 +23,6 @@ fun main(args: Array<String>) {
 //        Notepad()
         mainPanel = MainPanel(appName)
         UILifecycleHandler.onResume(mainPanel)
-        mainPanel.jep.alignmentX = Component.LEFT_ALIGNMENT
-        mainPanel.jep.addTreeSelectionListener(JsonTreeActionHandler)
         HttpManage.mainPanel = mainPanel
     }
 }
