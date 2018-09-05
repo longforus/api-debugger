@@ -24,7 +24,7 @@ object HttpManage {
 
 
     fun sendRequest() {
-        val request = buildRequest(getAbsoluteUrl(mainPanel.curApiUrl), UIActionHandler.getParameMap(mainPanel.tbParams,false), mainPanel.curMethod, mainPanel.curEncryptCode)
+        val request = buildRequest(getAbsoluteUrl(mainPanel.curApiUrl), UIActionHandler.getParamsMap(mainPanel.tbParams,false), mainPanel.curMethod, mainPanel.curEncryptCode)
         doRequest(request)
     }
 
@@ -54,8 +54,9 @@ object HttpManage {
                     val resStr = String(bytes)
                     mainPanel.tpInfo.append("response size: ${bytes.size} byte  \n ", Color.BLUE)
                     val json = mGson.fromJson<JsonObject>(resStr, JsonObject::class.java)
-                    val jsonStr = "\n" + mGson.toJson(json, JsonObject::class.java)
+                    val jsonStr =  mGson.toJson(json, JsonObject::class.java)
                     MyValueHandler.curShowJsonStr = jsonStr
+                    mainPanel.tpResponse.text = ""
                     mainPanel.tpResponse.append(jsonStr,autoScroll = false)
                     mainPanel.jep.setJson(resStr, JsonEditPanel.UpdateType.REPLACE)
                 } else {

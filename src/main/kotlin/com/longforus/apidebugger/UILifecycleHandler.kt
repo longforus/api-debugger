@@ -8,7 +8,6 @@ import com.longforus.apidebugger.bean.ProjectBean_
 import com.longforus.apidebugger.ui.MainPanel
 import io.objectbox.kotlin.query
 import javax.swing.*
-import javax.swing.table.DefaultTableModel
 
 /**
  * Created by XQ Yang on 8/31/2018  11:23 AM.
@@ -45,19 +44,19 @@ object UILifecycleHandler {
         if (api == null) {
             mainPanel.cbEncrypt.selectedIndex = 0
             mainPanel.cbMethod.selectedIndex = 0
-            mainPanel.tbParams.model = DefaultTableModel(arrayOf( "key", "value"), MyValueHandler.PARAME_TABLE_ROW_COUNT)
+            mainPanel.resetParamsTbModel()
         } else {
             val id2Index = MyValueHandler.encryptId2Index(api.encryptType)
             mainPanel.cbEncrypt.selectedIndex = id2Index
             mainPanel.cbMethod.selectedIndex = api.method
-            if (api.parameMap.isEmpty()) {
-                mainPanel.tbParams.model = DefaultTableModel(arrayOf( "key", "value"), MyValueHandler.PARAME_TABLE_ROW_COUNT)
+            if (api.paramsMap.isEmpty()) {
+                mainPanel.resetParamsTbModel()
             } else {
-//                api.parameMap.entries.forEachIndexed { index, entry ->
+//                api.paramsMap.entries.forEachIndexed { index, entry ->
 //                    mainPanel.tbParame.model.setValueAt(entry.key, index, 1)
 //                    mainPanel.tbParame.model.setValueAt(entry.value, index, 2)
 //                }
-                mainPanel.myTableModel.data = ApiBean.getTableVlaueList(api)
+                mainPanel.myParamsTableModel.data = ApiBean.getTableValueList(api)
             }
         }
     }

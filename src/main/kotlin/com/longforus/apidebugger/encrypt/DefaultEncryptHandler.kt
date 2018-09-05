@@ -18,13 +18,16 @@ class DefaultEncryptHandler : IEncryptHandler() {
     override fun onPostMethodEncrypt(params: Map<String, String>?, builder: Request.Builder, url: String): RequestBody {
         val sb = StringBuilder("?")
         val encodingBuilder = FormBody.Builder()
-        params?.forEach {
-            encodingBuilder.add(it.key, it.value)
-            sb.append(it.key).append("=").append(it.value).append("&")
-            mainPanel.tpInfo.append("key  =  ${it.key}   value =  ${it.value} \n")
+        if (params?.isNotEmpty() == true) {
+            mainPanel.tpInfo.append("params :\n")
+            params.forEach {
+                encodingBuilder.add(it.key, it.value)
+                sb.append(it.key).append("=").append(it.value).append("&")
+                mainPanel.tpInfo.append("    ${it.key}   =  ${it.value} \n")
+            }
+            val resultUrl = url + if (sb.endsWith("?") || sb.endsWith("&")) sb.subSequence(0, sb.length - 1) else sb.toString()
+            mainPanel.tpInfo.append("Url :\n$resultUrl \n")
         }
-        val resultUrl = url + if (sb.endsWith("?") || sb.endsWith("&")) sb.subSequence(0, sb.length - 1) else sb.toString()
-        mainPanel.tpInfo.append("Url :\n$resultUrl \n")
         return encodingBuilder.build()
     }
 
@@ -37,7 +40,7 @@ class DefaultEncryptHandler : IEncryptHandler() {
         }
         val resultUrl = url + if (sb.endsWith("?") || sb.endsWith("&")) sb.subSequence(0, sb.length - 1) else sb.toString()
         builder.url(resultUrl)
-        mainPanel.tpInfo.append("Url :\n$resultUrl \n")
+        mainPanel.tpInfo.append("Url :\n    $resultUrl \n")
     }
 
 }

@@ -6,12 +6,10 @@
     <rowspec value="top:4dlu:noGrow"/>
     <rowspec value="center:max(d;4px):noGrow"/>
     <rowspec value="top:4dlu:noGrow"/>
-    <rowspec value="center:max(d;4px):noGrow"/>
-    <rowspec value="top:4dlu:noGrow"/>
+    <rowspec value="center:33px:noGrow"/>
     <rowspec value="center:200px:noGrow"/>
     <rowspec value="top:4dlu:noGrow"/>
-    <rowspec value="center:max(d;4px):noGrow"/>
-    <rowspec value="top:4dlu:noGrow"/>
+    <rowspec value="center:40px:noGrow"/>
     <rowspec value="center:max(p;600px):grow"/>
     <rowspec value="center:max(d;4px):noGrow"/>
     <colspec value="fill:d:noGrow"/>
@@ -28,7 +26,7 @@
     <colspec value="left:4dlu:noGrow"/>
     <colspec value="fill:600px:grow"/>
     <constraints>
-      <xy x="20" y="20" width="1375" height="996"/>
+      <xy x="20" y="20" width="1375" height="1002"/>
     </constraints>
     <properties>
       <name value="Api debugger"/>
@@ -66,7 +64,7 @@
       </component>
       <scrollpane id="13be7">
         <constraints>
-          <grid row="7" column="0" row-span="1" col-span="11" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <grid row="6" column="0" row-span="1" col-span="11" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
           <forms defaultalign-horz="false" defaultalign-vert="false"/>
         </constraints>
         <properties/>
@@ -82,7 +80,7 @@
       </scrollpane>
       <scrollpane id="86e31">
         <constraints>
-          <grid row="11" column="0" row-span="1" col-span="11" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <grid row="9" column="0" row-span="1" col-span="11" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
           <forms defaultalign-horz="false" defaultalign-vert="false"/>
         </constraints>
         <properties>
@@ -100,7 +98,7 @@
       </scrollpane>
       <component id="8b0f0" class="javax.swing.JLabel" binding="lbStatus">
         <constraints>
-          <grid row="12" column="0" row-span="1" col-span="11" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="10" column="0" row-span="1" col-span="11" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
           <forms/>
         </constraints>
         <properties>
@@ -109,7 +107,7 @@
       </component>
       <scrollpane id="c35dd">
         <constraints>
-          <grid row="0" column="12" row-span="8" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <grid row="0" column="12" row-span="7" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
           <forms defaultalign-horz="false" defaultalign-vert="false"/>
         </constraints>
         <properties/>
@@ -125,22 +123,13 @@
         <rowspec value="center:d:grow"/>
         <colspec value="fill:d:grow"/>
         <constraints>
-          <grid row="8" column="12" row-span="4" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="7" column="12" row-span="3" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
           <forms/>
         </constraints>
         <properties/>
         <border type="none" title="Json Tree"/>
         <children/>
       </grid>
-      <component id="4ba05" class="javax.swing.JLabel">
-        <constraints>
-          <grid row="1" column="8" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-          <forms/>
-        </constraints>
-        <properties>
-          <text value="Encryption:"/>
-        </properties>
-      </component>
       <component id="a1a29" class="javax.swing.JComboBox" binding="mCbEncrypt">
         <constraints>
           <grid row="1" column="10" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
@@ -157,92 +146,93 @@
           <text value="Delete"/>
         </properties>
       </component>
-      <component id="60004" class="javax.swing.JLabel">
-        <constraints>
-          <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-          <forms/>
-        </constraints>
-        <properties>
-          <text value="Mthod:"/>
-        </properties>
-      </component>
-      <component id="48771" class="javax.swing.JComboBox" binding="mCbApiUrl">
-        <constraints>
-          <grid row="5" column="2" row-span="1" col-span="7" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
-          <forms/>
-        </constraints>
-        <properties>
-          <editable value="true"/>
-        </properties>
-      </component>
       <component id="260c2" class="javax.swing.JComboBox" binding="mCbMethod">
         <constraints>
-          <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="1" column="8" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
           <forms/>
         </constraints>
         <properties/>
       </component>
       <component id="a35e1" class="javax.swing.JLabel">
         <constraints>
-          <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
           <forms/>
         </constraints>
         <properties>
           <text value="Api Url:"/>
         </properties>
       </component>
+      <component id="48771" class="javax.swing.JComboBox" binding="mCbApiUrl">
+        <constraints>
+          <grid row="3" column="2" row-span="1" col-span="7" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+          <forms/>
+        </constraints>
+        <properties>
+          <editable value="true"/>
+        </properties>
+      </component>
       <component id="e47f" class="javax.swing.JButton" binding="btnDelApi">
         <constraints>
-          <grid row="3" column="10" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="5" column="10" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
           <forms/>
         </constraints>
         <properties>
           <text value="Delete"/>
         </properties>
       </component>
-      <component id="1e7e4" class="javax.swing.JButton" binding="mBtnSaveApi">
-        <constraints>
-          <grid row="3" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-          <forms/>
-        </constraints>
-        <properties>
-          <text value="Save"/>
-        </properties>
-      </component>
-      <component id="bbb13" class="javax.swing.JButton" binding="mBtnNewApi">
-        <constraints>
-          <grid row="3" column="8" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-          <forms/>
-        </constraints>
-        <properties>
-          <text value="Copy New"/>
-        </properties>
-      </component>
       <component id="998ff" class="javax.swing.JButton" binding="mBtnSend">
         <constraints>
-          <grid row="5" column="10" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="5" column="4" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
           <forms/>
         </constraints>
         <properties>
           <text value="Send"/>
         </properties>
       </component>
-      <component id="a3dc4" class="javax.swing.JButton" binding="btnAddRow">
+      <grid id="b83c2" layout-manager="FlowLayout" hgap="3" vgap="0" flow-align="2">
         <constraints>
-          <grid row="9" column="0" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="8" column="0" row-span="1" col-span="11" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <forms/>
+        </constraints>
+        <properties/>
+        <border type="none"/>
+        <children>
+          <component id="ba880" class="javax.swing.JButton" binding="btnAddRow">
+            <constraints/>
+            <properties>
+              <text value="Add Row"/>
+            </properties>
+          </component>
+          <component id="5088b" class="javax.swing.JButton" binding="btnDelRow">
+            <constraints/>
+            <properties>
+              <text value="Delete Row"/>
+            </properties>
+          </component>
+          <component id="fa62b" class="javax.swing.JButton" binding="btnClear">
+            <constraints/>
+            <properties>
+              <text value="Clear"/>
+            </properties>
+          </component>
+        </children>
+      </grid>
+      <component id="bbb13" class="javax.swing.JButton" binding="mBtnNewApi">
+        <constraints>
+          <grid row="3" column="10" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
           <forms/>
         </constraints>
         <properties>
-          <text value="Add Row"/>
+          <text value="Copy New"/>
         </properties>
       </component>
-      <component id="5088b" class="javax.swing.JButton" binding="btnDelRow">
+      <component id="1e7e4" class="javax.swing.JButton" binding="mBtnSaveApi">
         <constraints>
-          <grid row="9" column="4" row-span="1" col-span="7" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="5" column="8" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
           <forms/>
         </constraints>
         <properties>
-          <text value="Delete Selected Row"/>
+          <text value="Save"/>
         </properties>
       </component>
     </children>

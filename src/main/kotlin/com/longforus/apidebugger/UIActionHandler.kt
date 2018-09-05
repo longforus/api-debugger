@@ -31,7 +31,7 @@ object UIActionHandler {
                 apiBean = ApiBean(selectedItem, it.id)
                 apiBean.encryptType = mainPanel.selectedEncryptID
                 apiBean.method = mainPanel.selectedMethodType
-                apiBean.parameMap = getParameMap(mainPanel.tbParams)
+                apiBean.paramsMap = getParamsMap(mainPanel.tbParams)
                 it.apis.add(0, apiBean)
                 val model = mainPanel.cbApiUrl.model as DefaultComboBoxModel
                 model.insertElementAt(apiBean, 0)
@@ -40,13 +40,13 @@ object UIActionHandler {
                 apiBean = selectedItem as ApiBean
                 apiBean.encryptType = mainPanel.selectedEncryptID
                 apiBean.method = mainPanel.selectedMethodType
-                apiBean.parameMap = getParameMap(mainPanel.tbParams)
+                apiBean.paramsMap = getParamsMap(mainPanel.tbParams)
             }
             OB.apiBox.put(apiBean)
         }
     }
 
-    fun getParameMap(jTable: JTable, isSave: Boolean = true): Map<String, String> {
+    fun getParamsMap(jTable: JTable, isSave: Boolean = true): MutableMap<String, String> {
         val map = HashMap<String, String>()
         for (i in 0..jTable.rowCount) {
             if (jTable.getValueAt(i, 1) == null) {
@@ -106,6 +106,14 @@ object UIActionHandler {
             if (MyValueHandler.curApi != null) {
                 OB.apiBox.put(MyValueHandler.curApi)
             }
+        }
+    }
+
+    fun onClearParams() {
+        MyValueHandler.curApi?.paramsMap?.clear()
+        mainPanel.myParamsTableModel.clear()
+        if (MyValueHandler.curApi != null) {
+            OB.apiBox.put(MyValueHandler.curApi)
         }
     }
 }

@@ -103,7 +103,7 @@ public class JsonEditPanel extends JPanel {
                     text = component.toSSearchStr();
             }
             MyValueHandler.INSTANCE.setSysClipboardText(text);
-        });
+    });
         mPopupMenu.add(copy);
         jTree.addMouseListener(new MouseInputAdapter() {
             @Override
