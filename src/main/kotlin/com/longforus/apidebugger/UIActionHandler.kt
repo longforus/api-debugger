@@ -29,13 +29,16 @@ object UIActionHandler {
             val apiBean: ApiBean
             if (selectedItem is String) {
                 apiBean = ApiBean(selectedItem, it.id)
-                apiBean.encryptType = mainPanel.selectedEncryptID
-                apiBean.method = mainPanel.selectedMethodType
-                apiBean.paramsMap = getParamsMap(mainPanel.tbParams)
-                it.apis.add(0, apiBean)
-                val model = mainPanel.cbApiUrl.model as DefaultComboBoxModel
-                model.insertElementAt(apiBean, 0)
-                MyValueHandler.curApi = apiBean
+                if (!it.apis.contains(apiBean)) {
+                    apiBean.encryptType = mainPanel.selectedEncryptID
+                    apiBean.method = mainPanel.selectedMethodType
+                    apiBean.paramsMap = getParamsMap(mainPanel.tbParams)
+                    it.apis.add(0, apiBean)
+                    val model = mainPanel.cbApiUrl.model as DefaultComboBoxModel
+                    model.insertElementAt(apiBean, 0)
+                    mainPanel.cbApiUrl.selectedIndex = 0
+                    MyValueHandler.curApi = apiBean
+                }
             } else {
                 apiBean = selectedItem as ApiBean
                 apiBean.encryptType = mainPanel.selectedEncryptID
@@ -63,7 +66,6 @@ object UIActionHandler {
         val clone = MyValueHandler.curApi?.clone() as ApiBean?
         clone?.let {
             OB.apiBox.put(it)
-            MyValueHandler.curProject?.apis?.add(it)
             MyValueHandler.curApi = it
             mainPanel.cbApiUrl.insertItemAt(it, 0)
             mainPanel.cbApiUrl.selectedIndex = 0

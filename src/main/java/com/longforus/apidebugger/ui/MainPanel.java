@@ -12,6 +12,7 @@ import com.longforus.apidebugger.encrypt.IEncryptHandler;
 import com.teamdev.jxbrowser.chromium.Browser;
 import com.teamdev.jxbrowser.chromium.BrowserContext;
 import com.teamdev.jxbrowser.chromium.BrowserException;
+import com.teamdev.jxbrowser.chromium.JSFunction;
 import com.teamdev.jxbrowser.chromium.JSValue;
 import com.teamdev.jxbrowser.chromium.ProtocolService;
 import com.teamdev.jxbrowser.chromium.URLResponse;
@@ -50,7 +51,6 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.SizeRequirements;
-import javax.swing.border.Border;
 import javax.swing.event.MouseInputAdapter;
 import javax.swing.text.Element;
 import javax.swing.text.View;
@@ -73,7 +73,6 @@ public class MainPanel extends JFrame {
     private JComboBox mCbEncrypt;
     private JTable mTbParams;
     private JTextPane mTpInfo;
-    private JButton mBtnNewApi;
     private JLabel lbStatus;
     private JPanel baseP;
     private JButton btnDelUrl;
@@ -229,7 +228,6 @@ public class MainPanel extends JFrame {
                 }
             }
         });
-        mBtnNewApi.addActionListener(e -> UIActionHandler.INSTANCE.onNewApi());
         mBtnSend.addActionListener(e -> UIActionHandler.INSTANCE.onSend());
         btnClear.addActionListener(e -> UIActionHandler.INSTANCE.onClearParams());
         mCbMethod.addItemListener(e -> UIActionHandler.INSTANCE.onMethodChanged(mCbMethod.getSelectedIndex()));
@@ -237,7 +235,6 @@ public class MainPanel extends JFrame {
     }
 
     private void initTextPanel() {
-
         mTpInfo.addMouseListener(new MouseInputAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -355,8 +352,8 @@ public class MainPanel extends JFrame {
     }
 
     public String getCurApiUrl() {
-        if (mCbBaseUrl.getSelectedItem() != null) {
-            return mCbApiUrl.getSelectedItem().toString();
+        if (mCbApiUrl.getEditor().getItem() != null) {
+            return mCbApiUrl.getEditor().getItem().toString();
         }
         return "";
     }
@@ -452,17 +449,8 @@ public class MainPanel extends JFrame {
         mBtnSend.setPreferredSize(new Dimension(78, 78));
         mBtnSend.setRequestFocusEnabled(false);
         mBtnSend.setText("");
+        mBtnSend.setToolTipText("Send");
         baseP.add(mBtnSend, cc.xywh(11, 4, 1, 2));
-        btnDelApi = new JButton();
-        btnDelApi.setText("Delete");
-        baseP.add(btnDelApi, cc.xy(9, 5));
-        mBtnNewApi = new JButton();
-        mBtnNewApi.setText("Copy New");
-        baseP.add(mBtnNewApi, cc.xy(9, 4));
-        mbtnDp = new JButton();
-        mbtnDp.setText(" Default Parameter");
-        mbtnDp.setToolTipText(" Set Current Project Default Parameter");
-        baseP.add(mbtnDp, cc.xyw(5, 5, 3));
         final JPanel panel2 = new JPanel();
         panel2.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(1, 3, new Insets(0, 0, 0, 0), -1, -1));
         panel2.setBackground(new Color(-15856893));
@@ -485,6 +473,13 @@ public class MainPanel extends JFrame {
             com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW,
             com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         baseP.add(mBrowserView, cc.xywh(1, 8, 13, 2));
+        btnDelApi = new JButton();
+        btnDelApi.setText("Delete");
+        baseP.add(btnDelApi, cc.xy(9, 4));
+        mbtnDp = new JButton();
+        mbtnDp.setText(" Default Parameter");
+        mbtnDp.setToolTipText(" Set Current Project Default Parameter");
+        baseP.add(mbtnDp, cc.xyw(7, 5, 3));
     }
 
     /** @noinspection ALL */

@@ -48,14 +48,14 @@ object HttpManage {
 
             @Throws(IOException::class)
             override fun onResponse(call: Call, response: Response) {
-                UIActionHandler.onSaveApi(mainPanel.cbApiUrl.selectedItem)
+                UIActionHandler.onSaveApi(mainPanel.cbApiUrl.editor.item)
                 mainPanel.lbStatus.text = "onResponse code: ${response.code()} "
-                mainPanel.tpInfo.append("consuming: ${System.currentTimeMillis() - startTime}ms  \n ", Color.BLUE)
+                mainPanel.tpInfo.append("\nconsuming: ${System.currentTimeMillis() - startTime}ms  \n", Color.BLUE)
                 if (response.isSuccessful) {
                     val body = response.body() ?: return
                     val bytes = body.bytes()
                     val resStr = String(bytes)
-                    mainPanel.tpInfo.append("response size: ${bytes.size} byte  \n ", Color.BLUE)
+                    mainPanel.tpInfo.append("response size: ${bytes.size} byte  \n", Color.BLUE)
                     val json = mGson.fromJson<JsonObject>(resStr, JsonObject::class.java)
                     val jsonStr = mGson.toJson(json, JsonObject::class.java)
                     MyValueHandler.curShowJsonStr = jsonStr
