@@ -33,7 +33,7 @@ var id: Long = 0,
             }
             val list = mutableListOf<TableBean>()
             bean.paramsMap.forEach {
-                list.add(TableBean(true, it.key, it.value))
+                list.add(TableBean(selected= true,key =  it.key,value = it.value))
             }
             return list
         }

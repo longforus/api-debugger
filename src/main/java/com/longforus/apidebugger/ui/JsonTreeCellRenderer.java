@@ -9,6 +9,7 @@ import javax.swing.tree.DefaultTreeCellRenderer;
  *
  * @author RuiLin.Xie - xKF24276
  */
+@Deprecated
 public class JsonTreeCellRenderer extends DefaultTreeCellRenderer {
     /**
      * ID

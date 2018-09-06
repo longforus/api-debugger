@@ -37,6 +37,7 @@ import org.apache.commons.lang3.StringUtils;
  * limitations under the License.
  * </p>
  */
+@Deprecated
 public class JsonJTreeNode extends DefaultMutableTreeNode {
     /**
      * Using default serial id.

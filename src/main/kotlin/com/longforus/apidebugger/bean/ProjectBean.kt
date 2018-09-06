@@ -19,18 +19,35 @@ data class ProjectBean(
     var name: String = "",
     @Convert(converter = ListDbConverter::class,
         dbType = String::class)
-    var baseUrlList: MutableList<String> = mutableListOf()) {
-
-
+    var baseUrlList: MutableList<String> = mutableListOf()
+) {
     @Transient
     var apis: MutableList<ApiBean> = mutableListOf()
         get() {
+            if (field.isNotEmpty()) {
+                return field
+            }
             field.clear()
             field.addAll(OB.apiBox.query {
                 equal(ApiBean_.projectId, id)
             }.find().sortedByDescending { apiBean -> apiBean.createDate })
             return field
         }
+
+    @Transient
+    var defaultParams: MutableList<TableBean> = mutableListOf()
+        //这里每次都会读取不够优雅
+        get() {
+            if (field.isNotEmpty()) {
+                return field
+            }
+            field.clear()
+            field.addAll(OB.paramsBox.query {
+                equal(TableBean_.projectId, id)
+            }.find())
+            return field
+        }
+
 
 
     override fun toString(): String {

@@ -4,78 +4,102 @@
   "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
   "entities": [
     {
-      "id": "1:9070185516669921501",
-      "lastPropertyId": "8:1187463951019417804",
+      "id": "1:7108676259396977645",
+      "lastPropertyId": "7:2295757526968835612",
       "name": "ApiBean",
       "properties": [
         {
-          "id": "1:7029712485078776413",
+          "id": "1:1639868835150814962",
           "name": "id"
         },
         {
-          "id": "2:3978875683780283793",
+          "id": "2:2080580518748061893",
           "name": "method"
         },
         {
-          "id": "3:8086421898222647303",
+          "id": "3:2834421018815822379",
           "name": "url"
         },
         {
-          "id": "5:8038266698557329938",
-          "name": "encryptType"
-        },
-        {
-          "id": "6:5499539181800737854",
-          "indexId": "4:8865588299107533145",
-          "name": "projectId"
-        },
-        {
-          "id": "7:9042463734489530509",
+          "id": "4:4825371467230632842",
           "name": "paramsMap"
         },
         {
-          "id": "8:1187463951019417804",
+          "id": "5:2063548344561858784",
+          "name": "encryptType"
+        },
+        {
+          "id": "6:5429222793148795982",
+          "indexId": "1:7522200330075218487",
+          "name": "projectId"
+        },
+        {
+          "id": "7:2295757526968835612",
           "name": "createDate"
         }
       ],
       "relations": []
     },
     {
-      "id": "2:7225886512415135978",
-      "lastPropertyId": "3:5993062338108394619",
+      "id": "2:6221161776531880629",
+      "lastPropertyId": "3:5891365109221921321",
       "name": "ProjectBean",
       "properties": [
         {
-          "id": "1:5197485647034223002",
+          "id": "1:3849416496976680262",
           "name": "id"
         },
         {
-          "id": "2:5984115378107091375",
-          "indexId": "3:1701380745400854523",
+          "id": "2:2968560084276041096",
+          "indexId": "2:3527440894535392875",
           "name": "name"
         },
         {
-          "id": "3:5993062338108394619",
+          "id": "3:5891365109221921321",
           "name": "baseUrlList"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "3:6642322354700112124",
+      "lastPropertyId": "5:42282130757559747",
+      "name": "TableBean",
+      "properties": [
+        {
+          "id": "1:7768808324752372527",
+          "name": "id"
+        },
+        {
+          "id": "2:3447499673520710493",
+          "name": "selected"
+        },
+        {
+          "id": "3:6991724854441645252",
+          "name": "key"
+        },
+        {
+          "id": "4:3343448092562084023",
+          "name": "value"
+        },
+        {
+          "id": "5:42282130757559747",
+          "indexId": "3:1193464731902280295",
+          "name": "projectId"
         }
       ],
       "relations": []
     }
   ],
-  "lastEntityId": "2:7225886512415135978",
-  "lastIndexId": "4:8865588299107533145",
+  "lastEntityId": "3:6642322354700112124",
+  "lastIndexId": "3:1193464731902280295",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",
   "modelVersion": 4,
   "modelVersionParserMinimum": 4,
   "retiredEntityUids": [],
-  "retiredIndexUids": [
-    4865196870853324190,
-    4855703933356883490
-  ],
-  "retiredPropertyUids": [
-    5827927612626697138
-  ],
+  "retiredIndexUids": [],
+  "retiredPropertyUids": [],
   "retiredRelationUids": [],
   "version": 1
 }

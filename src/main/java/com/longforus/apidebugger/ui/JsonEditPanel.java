@@ -48,6 +48,7 @@ import javax.swing.tree.TreeSelectionModel;
  * limitations under the License.
  * </p>
  */
+@Deprecated
 public class JsonEditPanel extends JPanel {
     /**
      * Using default serial version id.

@@ -12,16 +12,13 @@ import com.longforus.apidebugger.encrypt.IEncryptHandler;
 import com.teamdev.jxbrowser.chromium.Browser;
 import com.teamdev.jxbrowser.chromium.BrowserContext;
 import com.teamdev.jxbrowser.chromium.BrowserException;
-import com.teamdev.jxbrowser.chromium.JSFunction;
 import com.teamdev.jxbrowser.chromium.JSValue;
 import com.teamdev.jxbrowser.chromium.ProtocolService;
 import com.teamdev.jxbrowser.chromium.URLResponse;
 import com.teamdev.jxbrowser.chromium.swing.BrowserView;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Graphics;
 import java.awt.HeadlessException;
 import java.awt.Image;
 import java.awt.Insets;
@@ -29,7 +26,6 @@ import java.awt.Toolkit;
 import java.awt.event.ItemEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.DataInputStream;
 import java.io.InputStream;
@@ -229,9 +225,21 @@ public class MainPanel extends JFrame {
             }
         });
         mBtnSend.addActionListener(e -> UIActionHandler.INSTANCE.onSend());
-        btnClear.addActionListener(e -> UIActionHandler.INSTANCE.onClearParams());
+
         mCbMethod.addItemListener(e -> UIActionHandler.INSTANCE.onMethodChanged(mCbMethod.getSelectedIndex()));
         mCbEncrypt.addItemListener(e -> UIActionHandler.INSTANCE.onEncryptTypeChanged(((IEncryptHandler) e.getItem()).getTypeCode()));
+        mbtnDp.addActionListener(e -> showDefaultParamsDialog());
+    }
+
+    private void showDefaultParamsDialog() {
+        if (MyValueHandler.INSTANCE.getCurProject() == null) {
+            ExtFunKt.showErrorMsg("Please create the project first");
+            return;
+        }
+        DefaultParamsDialog paramsDialog = new DefaultParamsDialog();
+        paramsDialog.pack();
+        paramsDialog.setLocation((getX() + getWidth() / 2) - (paramsDialog.getWidth() / 2), getY() + getHeight() / 2 - paramsDialog.getHeight() / 2);
+        paramsDialog.setVisible(true);
     }
 
     private void initTextPanel() {
@@ -299,15 +307,20 @@ public class MainPanel extends JFrame {
     }
 
     public void resetParamsTbModel() {
-        mMyParamsTableModel = new MyParamsTableModel();
-        mTbParams.setModel(mMyParamsTableModel);
-        mTbParams.getColumnModel().getColumn(0).setPreferredWidth(50);
-        mTbParams.getColumnModel().getColumn(1).setPreferredWidth(120);
-        mTbParams.getColumnModel().getColumn(2).setPreferredWidth(350);
+        mMyParamsTableModel = MainPanel.resetParamsTbModel(mTbParams);
+    }
+
+    public static MyParamsTableModel resetParamsTbModel(JTable table) {
+        MyParamsTableModel model = new MyParamsTableModel();
+        table.setModel(model);
+        table.getColumnModel().getColumn(0).setPreferredWidth(50);
+        table.getColumnModel().getColumn(1).setPreferredWidth(120);
+        table.getColumnModel().getColumn(2).setPreferredWidth(350);
+        return model;
     }
 
     private void initTable() {
-        resetParamsTbModel();
+        mMyParamsTableModel = resetParamsTbModel(mTbParams);
         mTbParams.addKeyListener(new KeyListener() {
             @Override
             public void keyTyped(KeyEvent e) {
@@ -334,6 +347,7 @@ public class MainPanel extends JFrame {
             mTbParams.editCellAt(index, 1);
         });
         btnDelRow.addActionListener(e -> mMyParamsTableModel.removeRow(mTbParams.getSelectedRow()));
+        btnClear.addActionListener(e -> UIActionHandler.INSTANCE.onClearParams());
     }
 
     private void createUIComponents() {
