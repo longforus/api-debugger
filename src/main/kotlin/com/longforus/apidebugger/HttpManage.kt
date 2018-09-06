@@ -23,7 +23,11 @@ object HttpManage {
 
 
     fun sendRequest() {
-        val request = buildRequest(getAbsoluteUrl(mainPanel.curApiUrl), UIActionHandler.getParamsMap(mainPanel.tbParams,false), mainPanel.curMethod, mainPanel.curEncryptCode)
+        val url = getAbsoluteUrl(mainPanel.curApiUrl)
+        if (url.isEmpty()) {
+            return
+        }
+        val request = buildRequest(url, UIActionHandler.getParamsMap(mainPanel.tbParams, false), mainPanel.curMethod, mainPanel.curEncryptCode)
         doRequest(request)
     }
 
@@ -44,6 +48,7 @@ object HttpManage {
 
             @Throws(IOException::class)
             override fun onResponse(call: Call, response: Response) {
+                UIActionHandler.onSaveApi(mainPanel.cbApiUrl.selectedItem)
                 mainPanel.lbStatus.text = "onResponse code: ${response.code()} "
                 mainPanel.tpInfo.append("consuming: ${System.currentTimeMillis() - startTime}ms  \n ", Color.BLUE)
                 if (response.isSuccessful) {
@@ -52,9 +57,9 @@ object HttpManage {
                     val resStr = String(bytes)
                     mainPanel.tpInfo.append("response size: ${bytes.size} byte  \n ", Color.BLUE)
                     val json = mGson.fromJson<JsonObject>(resStr, JsonObject::class.java)
-                    val jsonStr =  mGson.toJson(json, JsonObject::class.java)
+                    val jsonStr = mGson.toJson(json, JsonObject::class.java)
                     MyValueHandler.curShowJsonStr = jsonStr
-
+                    mainPanel.setJsonData(jsonStr)
                 } else {
                     mainPanel.tpInfo.append("\non response but not success\n", Color.RED)
                     mainPanel.tpInfo.append("code = ${response.code()} \n ", Color.RED)
@@ -95,5 +100,11 @@ object HttpManage {
      *
      * @param relativeUrl 相对路径
      */
-    private fun getAbsoluteUrl(relativeUrl: String) = mainPanel.curBaseUrl + relativeUrl
+    private fun getAbsoluteUrl(relativeUrl: String): String {
+        if (mainPanel.curBaseUrl.isNullOrEmpty()) {
+            showErrorMsg("BaseURL is Null")
+            return ""
+        }
+        return mainPanel.curBaseUrl + relativeUrl
+    }
 }

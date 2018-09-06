@@ -71,7 +71,11 @@ object UIActionHandler {
     }
 
     fun onSend() {
-        HttpManage.sendRequest()
+        if (MyValueHandler.curProject == null) {
+            showErrorMsg("Please create the project first")
+        } else {
+            HttpManage.sendRequest()
+        }
     }
 
     fun onDelBaseUrl(selectedItem: Any) {

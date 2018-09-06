@@ -10,18 +10,33 @@ import com.longforus.apidebugger.UILifecycleHandler;
 import com.longforus.apidebugger.bean.ApiBean;
 import com.longforus.apidebugger.encrypt.IEncryptHandler;
 import com.teamdev.jxbrowser.chromium.Browser;
+import com.teamdev.jxbrowser.chromium.BrowserContext;
 import com.teamdev.jxbrowser.chromium.BrowserException;
+import com.teamdev.jxbrowser.chromium.JSValue;
+import com.teamdev.jxbrowser.chromium.ProtocolService;
+import com.teamdev.jxbrowser.chromium.URLResponse;
 import com.teamdev.jxbrowser.chromium.swing.BrowserView;
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Graphics;
 import java.awt.HeadlessException;
+import java.awt.Image;
+import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.ItemEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.DataInputStream;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
@@ -32,8 +47,10 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.SizeRequirements;
+import javax.swing.border.Border;
 import javax.swing.event.MouseInputAdapter;
 import javax.swing.text.Element;
 import javax.swing.text.View;
@@ -56,7 +73,6 @@ public class MainPanel extends JFrame {
     private JComboBox mCbEncrypt;
     private JTable mTbParams;
     private JTextPane mTpInfo;
-    private JButton mBtnSaveApi;
     private JButton mBtnNewApi;
     private JLabel lbStatus;
     private JPanel baseP;
@@ -66,7 +82,10 @@ public class MainPanel extends JFrame {
     private JButton btnAddRow;
     private JButton btnDelRow;
     private JButton btnClear;
-    private BrowserView mBrowserView1;
+    private BrowserView mBrowserView;
+    private JButton mbtnDp;
+    private JTextField tvTestCount;
+    private JButton mStartButton;
     private Browser mBrowser;
 
     public JComboBox getCbMethod() {
@@ -112,7 +131,18 @@ public class MainPanel extends JFrame {
     public MainPanel(String title) throws HeadlessException {
         super(title);
         $$$setupUI$$$();
+
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        String filename = getClass().getResource("") + "send.png";
+        try {
+            ImageIcon icon = new ImageIcon(new URL(filename));
+            setIconImage(icon.getImage());
+            icon.setImage(icon.getImage().getScaledInstance(68, 68, Image.SCALE_SMOOTH));
+
+            mBtnSend.setIcon(icon);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
         mCbMethod.setModel(new DefaultComboBoxModel(new String[] { "POST", "GET" }));
         setContentPane(baseP);
         setJMenuBar(UILifecycleHandler.INSTANCE.getMenuBar());
@@ -127,27 +157,76 @@ public class MainPanel extends JFrame {
         int y = 0;
         setLocation(x, y);
         setVisible(true);
-        String resource = getClass().getResource("").getPath();
-        int index = resource.indexOf(".jar");
-        String path;
-        if (index > 0) {
-            int last = resource.lastIndexOf("/", index);
-            path = resource.substring(0, last) + "/jsonView/index.html";
-        } else {//debug model
-            path = resource.substring(1) + "/jsonView/index.html";
+
+        browserInit();
+
+        //Observable.create((ObservableOnSubscribe<String>) emitter -> emitter.onNext("{}")).delay(10, TimeUnit.MILLISECONDS).subscribe(
+        //    s -> mBrowser.executeJavaScript("app.doc" + "._id || (document.location.href = document.location.pathname + \"#/new\", location.reload())"));
+
+    }
+
+    public void setJsonData(String jsonData) {
+        JSValue app = mBrowser.executeJavaScriptAndReturnValue("app");
+        JSValue write = app.asObject().getProperty("setData");
+        write.asFunction().invoke(app.asObject(), jsonData);
+    }
+
+    private void browserInit() {
+        BrowserContext browserContext = mBrowser.getContext();
+        ProtocolService protocolService = browserContext.getProtocolService();
+        protocolService.setProtocolHandler("jar", request -> {
+            try {
+                URLResponse response = new URLResponse();
+                URL path = new URL(request.getURL());
+                InputStream inputStream = path.openStream();
+                DataInputStream stream = new DataInputStream(inputStream);
+                byte[] data = new byte[stream.available()];
+                stream.readFully(data);
+                response.setData(data);
+                String mimeType = getMimeType(path.toString());
+                response.getHeaders().setHeader("Content-Type", mimeType);
+                return response;
+            } catch (Exception ignored) {
+            }
+            return null;
+        });
+
+        // Assume that we need to load a resource related to this class in the JAR file
+        String url = getClass().getResource("") + "jsonView/index.html";
+        mBrowser.loadURL(url);
+    }
+
+    private static String getMimeType(String path) {
+        if (path.endsWith(".html")) {
+            return "text/html";
         }
-        mBrowser.loadURL(path);
-        mBrowser.executeJavaScript("app.setData('123')");
+        if (path.endsWith(".css")) {
+            return "text/css";
+        }
+        if (path.endsWith(".js")) {
+            return "text/javascript";
+        }
+        if (path.endsWith(".png")) {
+            return "image/png";
+        }
+        if (path.endsWith(".svg")) {
+            return "image/svg+xml";
+        }
+        if (path.endsWith(".ico")) {
+            return "image/x-icon";
+        }
+        return "text/html";
     }
 
     private void initEvent() {
         mBtnSaveBaseUrl.addActionListener(e -> UIActionHandler.INSTANCE.onSaveBaseUrl(mCbBaseUrl.getModel().getSelectedItem()));
         btnDelUrl.addActionListener(e -> UIActionHandler.INSTANCE.onDelBaseUrl(mCbBaseUrl.getModel().getSelectedItem()));
         btnDelApi.addActionListener(e -> UIActionHandler.INSTANCE.onDelApiUrl((ApiBean) mCbApiUrl.getModel().getSelectedItem()));
-        mBtnSaveApi.addActionListener(e -> UIActionHandler.INSTANCE.onSaveApi(mCbApiUrl.getModel().getSelectedItem()));
         mCbApiUrl.addItemListener(e -> {
             if (e.getStateChange() == ItemEvent.SELECTED) {
-                UIActionHandler.INSTANCE.onApiItemChanged(((ApiBean) e.getItem()));
+                if (e.getItem() instanceof ApiBean) {
+                    UIActionHandler.INSTANCE.onApiItemChanged(((ApiBean) e.getItem()));
+                }
             }
         });
         mBtnNewApi.addActionListener(e -> UIActionHandler.INSTANCE.onNewApi());
@@ -266,7 +345,7 @@ public class MainPanel extends JFrame {
         } catch (BrowserException e) {
             ExtFunKt.showErrorMsg("already been opened !!!");
         }
-        mBrowserView1 = new BrowserView(mBrowser);
+        mBrowserView = new BrowserView(mBrowser);
     }
 
     @Override
@@ -276,7 +355,10 @@ public class MainPanel extends JFrame {
     }
 
     public String getCurApiUrl() {
-        return mCbApiUrl.getSelectedItem().toString();
+        if (mCbBaseUrl.getSelectedItem() != null) {
+            return mCbApiUrl.getSelectedItem().toString();
+        }
+        return "";
     }
 
     public int getCurMethod() {
@@ -304,9 +386,10 @@ public class MainPanel extends JFrame {
         baseP.setLayout(new FormLayout(
             "fill:d:noGrow,left:4dlu:noGrow,fill:300px:noGrow,left:4dlu:noGrow,fill:d:noGrow,left:4dlu:noGrow,fill:max(d;4px):noGrow,left:4dlu:noGrow,fill:d:noGrow," +
                 "left:4dlu:noGrow,fill:d:noGrow,left:4dlu:noGrow,fill:600px:grow",
-            "center:d:noGrow,center:max(d;4px):noGrow,top:4dlu:noGrow,center:max(d;4px):noGrow,top:4dlu:noGrow,center:33px:noGrow,center:200px:noGrow,top:4dlu:noGrow," +
-                "center:40px:noGrow,center:max(p;600px):grow,center:max(d;4px):noGrow"));
+            "center:d:noGrow,center:max(d;4px):noGrow,top:4dlu:noGrow,center:33px:noGrow,center:33px:noGrow,center:200px:noGrow,center:40px:noGrow,top:4dlu:noGrow,center:max(p;" +
+                "600px):grow,center:max(d;4px):noGrow"));
         baseP.setName("Api debugger");
+        baseP.setPreferredSize(new Dimension(1341, 980));
         baseP.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1), null));
         final JLabel label1 = new JLabel();
         label1.setText("Base Url:");
@@ -319,24 +402,20 @@ public class MainPanel extends JFrame {
         mBtnSaveBaseUrl.setText("Save");
         baseP.add(mBtnSaveBaseUrl, cc.xy(5, 2));
         final JScrollPane scrollPane1 = new JScrollPane();
-        baseP.add(scrollPane1, cc.xyw(1, 7, 11, CellConstraints.FILL, CellConstraints.FILL));
+        baseP.add(scrollPane1, cc.xyw(1, 6, 11, CellConstraints.FILL, CellConstraints.FILL));
         scrollPane1.setBorder(BorderFactory.createTitledBorder("Request Parameter"));
         mTbParams = new JTable();
         mTbParams.setRowHeight(25);
         scrollPane1.setViewportView(mTbParams);
-        final JScrollPane scrollPane2 = new JScrollPane();
-        scrollPane2.setHorizontalScrollBarPolicy(31);
-        baseP.add(scrollPane2, cc.xyw(1, 10, 13, CellConstraints.FILL, CellConstraints.FILL));
-        scrollPane2.setBorder(BorderFactory.createTitledBorder("Response"));
-        scrollPane2.setViewportView(mBrowserView1);
         lbStatus = new JLabel();
         lbStatus.setText("Status:");
-        baseP.add(lbStatus, cc.xyw(1, 11, 11));
-        final JScrollPane scrollPane3 = new JScrollPane();
-        baseP.add(scrollPane3, cc.xywh(13, 1, 1, 7, CellConstraints.FILL, CellConstraints.FILL));
-        scrollPane3.setBorder(BorderFactory.createTitledBorder("Request Information"));
+        baseP.add(lbStatus, cc.xyw(1, 10, 11));
+        final JScrollPane scrollPane2 = new JScrollPane();
+        baseP.add(scrollPane2, cc.xywh(13, 1, 1, 7, CellConstraints.FILL, CellConstraints.FILL));
+        scrollPane2.setBorder(BorderFactory.createTitledBorder("Request Information"));
         mTpInfo = new JTextPane();
-        scrollPane3.setViewportView(mTpInfo);
+        mTpInfo.setText("");
+        scrollPane2.setViewportView(mTpInfo);
         mCbEncrypt = new JComboBox();
         baseP.add(mCbEncrypt, cc.xy(11, 2));
         btnDelUrl = new JButton();
@@ -349,16 +428,10 @@ public class MainPanel extends JFrame {
         baseP.add(label2, cc.xy(1, 4));
         mCbApiUrl = new JComboBox();
         mCbApiUrl.setEditable(true);
-        baseP.add(mCbApiUrl, cc.xyw(3, 4, 7));
-        btnDelApi = new JButton();
-        btnDelApi.setText("Delete");
-        baseP.add(btnDelApi, cc.xy(11, 6));
-        mBtnSend = new JButton();
-        mBtnSend.setText("Send");
-        baseP.add(mBtnSend, cc.xyw(5, 6, 3));
+        baseP.add(mCbApiUrl, cc.xyw(3, 4, 5));
         final JPanel panel1 = new JPanel();
         panel1.setLayout(new FlowLayout(FlowLayout.RIGHT, 3, 0));
-        baseP.add(panel1, cc.xyw(1, 9, 11));
+        baseP.add(panel1, cc.xyw(1, 7, 11));
         btnAddRow = new JButton();
         btnAddRow.setText("Add Row");
         panel1.add(btnAddRow);
@@ -368,12 +441,50 @@ public class MainPanel extends JFrame {
         btnClear = new JButton();
         btnClear.setText("Clear");
         panel1.add(btnClear);
+        mBtnSend = new JButton();
+        mBtnSend.setBorderPainted(false);
+        mBtnSend.setIconTextGap(1);
+        mBtnSend.setInheritsPopupMenu(false);
+        mBtnSend.setMargin(new Insets(5, 5, 5, 5));
+        mBtnSend.setMaximumSize(new Dimension(78, 78));
+        mBtnSend.setMinimumSize(new Dimension(78, 78));
+        mBtnSend.setOpaque(true);
+        mBtnSend.setPreferredSize(new Dimension(78, 78));
+        mBtnSend.setRequestFocusEnabled(false);
+        mBtnSend.setText("");
+        baseP.add(mBtnSend, cc.xywh(11, 4, 1, 2));
+        btnDelApi = new JButton();
+        btnDelApi.setText("Delete");
+        baseP.add(btnDelApi, cc.xy(9, 5));
         mBtnNewApi = new JButton();
         mBtnNewApi.setText("Copy New");
-        baseP.add(mBtnNewApi, cc.xy(11, 4));
-        mBtnSaveApi = new JButton();
-        mBtnSaveApi.setText("Save");
-        baseP.add(mBtnSaveApi, cc.xy(9, 6));
+        baseP.add(mBtnNewApi, cc.xy(9, 4));
+        mbtnDp = new JButton();
+        mbtnDp.setText(" Default Parameter");
+        mbtnDp.setToolTipText(" Set Current Project Default Parameter");
+        baseP.add(mbtnDp, cc.xyw(5, 5, 3));
+        final JPanel panel2 = new JPanel();
+        panel2.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(1, 3, new Insets(0, 0, 0, 0), -1, -1));
+        panel2.setBackground(new Color(-15856893));
+        baseP.add(panel2, cc.xyw(1, 5, 3));
+        final JLabel label3 = new JLabel();
+        label3.setForeground(new Color(-1));
+        label3.setText("Concurrent test");
+        panel2.add(label3, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST,
+            com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED,
+            com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        tvTestCount = new JTextField();
+        tvTestCount.setToolTipText("test count");
+        panel2.add(tvTestCount, new com.intellij.uiDesigner.core.GridConstraints(0, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST,
+            com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW,
+            com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        mStartButton = new JButton();
+        mStartButton.setText("Start");
+        panel2.add(mStartButton, new com.intellij.uiDesigner.core.GridConstraints(0, 2, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER,
+            com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL,
+            com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW,
+            com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        baseP.add(mBrowserView, cc.xywh(1, 8, 13, 2));
     }
 
     /** @noinspection ALL */

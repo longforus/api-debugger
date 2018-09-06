@@ -4,12 +4,11 @@
     <rowspec value="center:d:noGrow"/>
     <rowspec value="center:max(d;4px):noGrow"/>
     <rowspec value="top:4dlu:noGrow"/>
-    <rowspec value="center:max(d;4px):noGrow"/>
-    <rowspec value="top:4dlu:noGrow"/>
+    <rowspec value="center:33px:noGrow"/>
     <rowspec value="center:33px:noGrow"/>
     <rowspec value="center:200px:noGrow"/>
-    <rowspec value="top:4dlu:noGrow"/>
     <rowspec value="center:40px:noGrow"/>
+    <rowspec value="top:4dlu:noGrow"/>
     <rowspec value="center:max(p;600px):grow"/>
     <rowspec value="center:max(d;4px):noGrow"/>
     <colspec value="fill:d:noGrow"/>
@@ -26,10 +25,11 @@
     <colspec value="left:4dlu:noGrow"/>
     <colspec value="fill:600px:grow"/>
     <constraints>
-      <xy x="20" y="20" width="1375" height="1002"/>
+      <xy x="20" y="20" width="1502" height="1002"/>
     </constraints>
     <properties>
       <name value="Api debugger"/>
+      <preferredSize width="1341" height="980"/>
     </properties>
     <border type="empty">
       <size top="1" left="1" bottom="1" right="1"/>
@@ -64,7 +64,7 @@
       </component>
       <scrollpane id="13be7">
         <constraints>
-          <grid row="6" column="0" row-span="1" col-span="11" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <grid row="5" column="0" row-span="1" col-span="11" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
           <forms defaultalign-horz="false" defaultalign-vert="false"/>
         </constraints>
         <properties/>
@@ -78,24 +78,9 @@
           </component>
         </children>
       </scrollpane>
-      <scrollpane id="86e31">
-        <constraints>
-          <grid row="9" column="0" row-span="1" col-span="13" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-          <forms defaultalign-horz="false" defaultalign-vert="false"/>
-        </constraints>
-        <properties>
-          <horizontalScrollBarPolicy value="31"/>
-        </properties>
-        <border type="none" title="Response"/>
-        <children>
-          <component id="61514" class="com.teamdev.jxbrowser.chromium.swing.BrowserView" binding="mBrowserView1" custom-create="true" default-binding="true">
-            <constraints/>
-          </component>
-        </children>
-      </scrollpane>
       <component id="8b0f0" class="javax.swing.JLabel" binding="lbStatus">
         <constraints>
-          <grid row="10" column="0" row-span="1" col-span="11" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="9" column="0" row-span="1" col-span="11" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
           <forms/>
         </constraints>
         <properties>
@@ -112,7 +97,9 @@
         <children>
           <component id="c39d2" class="javax.swing.JTextPane" binding="mTpInfo">
             <constraints/>
-            <properties/>
+            <properties>
+              <text value=""/>
+            </properties>
           </component>
         </children>
       </scrollpane>
@@ -150,34 +137,16 @@
       </component>
       <component id="48771" class="javax.swing.JComboBox" binding="mCbApiUrl">
         <constraints>
-          <grid row="3" column="2" row-span="1" col-span="7" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="3" column="2" row-span="1" col-span="5" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
           <forms/>
         </constraints>
         <properties>
           <editable value="true"/>
         </properties>
       </component>
-      <component id="e47f" class="javax.swing.JButton" binding="btnDelApi">
-        <constraints>
-          <grid row="5" column="10" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-          <forms/>
-        </constraints>
-        <properties>
-          <text value="Delete"/>
-        </properties>
-      </component>
-      <component id="998ff" class="javax.swing.JButton" binding="mBtnSend">
-        <constraints>
-          <grid row="5" column="4" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-          <forms/>
-        </constraints>
-        <properties>
-          <text value="Send"/>
-        </properties>
-      </component>
       <grid id="b83c2" layout-manager="FlowLayout" hgap="3" vgap="0" flow-align="2">
         <constraints>
-          <grid row="8" column="0" row-span="1" col-span="11" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <grid row="6" column="0" row-span="1" col-span="11" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
           <forms/>
         </constraints>
         <properties/>
@@ -203,23 +172,97 @@
           </component>
         </children>
       </grid>
+      <component id="998ff" class="javax.swing.JButton" binding="mBtnSend">
+        <constraints>
+          <grid row="3" column="10" row-span="2" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <forms/>
+        </constraints>
+        <properties>
+          <borderPainted value="false"/>
+          <iconTextGap value="1"/>
+          <inheritsPopupMenu value="false"/>
+          <margin top="5" left="5" bottom="5" right="5"/>
+          <maximumSize width="78" height="78"/>
+          <minimumSize width="78" height="78"/>
+          <opaque value="true"/>
+          <preferredSize width="78" height="78"/>
+          <requestFocusEnabled value="false"/>
+          <text value=""/>
+        </properties>
+      </component>
+      <component id="e47f" class="javax.swing.JButton" binding="btnDelApi">
+        <constraints>
+          <grid row="4" column="8" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <forms/>
+        </constraints>
+        <properties>
+          <text value="Delete"/>
+        </properties>
+      </component>
       <component id="bbb13" class="javax.swing.JButton" binding="mBtnNewApi">
         <constraints>
-          <grid row="3" column="10" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="3" column="8" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
           <forms/>
         </constraints>
         <properties>
           <text value="Copy New"/>
         </properties>
       </component>
-      <component id="1e7e4" class="javax.swing.JButton" binding="mBtnSaveApi">
+      <component id="80e6b" class="javax.swing.JButton" binding="mbtnDp">
         <constraints>
-          <grid row="5" column="8" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="4" column="4" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
           <forms/>
         </constraints>
         <properties>
-          <text value="Save"/>
+          <text value=" Default Parameter"/>
+          <toolTipText value=" Set Current Project Default Parameter"/>
         </properties>
+      </component>
+      <grid id="69c35" layout-manager="GridLayoutManager" row-count="1" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+        <margin top="0" left="0" bottom="0" right="0"/>
+        <constraints>
+          <grid row="4" column="0" row-span="1" col-span="3" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <forms/>
+        </constraints>
+        <properties>
+          <background color="-15856893"/>
+        </properties>
+        <border type="none"/>
+        <children>
+          <component id="628c7" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <foreground color="-1"/>
+              <text value="Concurrent test"/>
+            </properties>
+          </component>
+          <component id="8ef11" class="javax.swing.JTextField" binding="tvTestCount">
+            <constraints>
+              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="-1"/>
+              </grid>
+            </constraints>
+            <properties>
+              <toolTipText value="test count"/>
+            </properties>
+          </component>
+          <component id="67965" class="javax.swing.JButton" binding="mStartButton" default-binding="true">
+            <constraints>
+              <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Start"/>
+            </properties>
+          </component>
+        </children>
+      </grid>
+      <component id="61514" class="com.teamdev.jxbrowser.chromium.swing.BrowserView" binding="mBrowserView" custom-create="true">
+        <constraints>
+          <grid row="7" column="0" row-span="2" col-span="13" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+          <forms/>
+        </constraints>
       </component>
     </children>
   </grid>
