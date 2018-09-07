@@ -17,7 +17,7 @@ A like Postman API debugger that supports custom encryption.
 
 ## 安装
 
-点击下载最新release包.在安装了JDK1.8或者JRE1.8的电脑上,双击jar包直接运行.
+点击[下载最新release包](https://github.com/longforus/api-debugger/releases).在安装了JDK1.8或者JRE1.8的电脑上,双击jar包直接运行.
 
 -   JDK下载地址:https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
 -   如果在Windows系统下无法正常使用的话.需要安装 [Microsoft Visual C++ 2015 Redistributable (x64)](http://www.microsoft.com/en-us/download/details.aspx?id=53587)
