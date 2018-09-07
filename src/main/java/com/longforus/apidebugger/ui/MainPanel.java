@@ -139,7 +139,7 @@ public class MainPanel extends JFrame {
         $$$setupUI$$$();
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        String filename = getClass().getResource("") + "send.png";
+        String filename = getClass().getResource("") + "jsonView/send.png";
         try {
             ImageIcon icon = new ImageIcon(new URL(filename));
             setIconImage(icon.getImage());

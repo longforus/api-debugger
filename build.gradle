@@ -67,10 +67,10 @@ dependencies {
 
 // enable debug output for plugin
 objectbox {
-    debug true
+    debug false
 }
 // enable debug output for annotation processor
 tasks.withType(JavaCompile) {
-    options.compilerArgs += [ "-Aobjectbox.debug=true" ]
+    options.compilerArgs += [ "-Aobjectbox.debug=false" ]
     options.encoding = "UTF-8"
 }

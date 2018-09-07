@@ -13,7 +13,7 @@ import java.math.BigInteger
  */
 
 lateinit var mainPanel: MainPanel
-val appName = "Fec Api debugger"
+val appName = "Api debugger"
 
 
 fun main(args: Array<String>) {

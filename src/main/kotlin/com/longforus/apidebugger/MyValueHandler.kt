@@ -17,10 +17,9 @@ import java.awt.datatransfer.StringSelection
 
 object MyValueHandler {
 
-    const val PARAME_TABLE_ROW_COUNT = 15
-
 
     val encryptImplList = listOf<IEncryptHandler>(kzEncryptHandler(), DefaultEncryptHandler())
+//    val encryptImplList = listOf<IEncryptHandler>( DefaultEncryptHandler())
     val mGson =GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create()
 
     var curProject: ProjectBean? = null

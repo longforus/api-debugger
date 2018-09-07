@@ -9,7 +9,7 @@ import okhttp3.RequestBody
 
 /**
  * Created by XQ Yang on 8/30/2018  5:13 PM.
- * Description :
+ * Description : 默认加密
  */
 class DefaultEncryptHandler : IEncryptHandler() {
     override val typeCode: Int = 0

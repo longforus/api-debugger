@@ -10,7 +10,6 @@ import javax.swing.DefaultComboBoxModel
  */
 object UIActionHandler {
 
-
     fun onSaveBaseUrl(selectedItem: Any) {
         MyValueHandler.curProject?.let {
             if (!it.baseUrlList.contains(selectedItem as String)) {
@@ -21,7 +20,6 @@ object UIActionHandler {
                 model.insertElementAt(selectedItem, 0)
             }
         }
-
     }
 
     fun onSaveApi(selectedItem: Any) {
