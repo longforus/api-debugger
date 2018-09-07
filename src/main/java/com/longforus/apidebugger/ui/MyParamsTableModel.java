@@ -3,11 +3,13 @@ package com.longforus.apidebugger.ui;
 import com.longforus.apidebugger.bean.TableBean;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.swing.table.AbstractTableModel;
+import org.apache.commons.lang3.StringUtils;
 
 public class MyParamsTableModel extends AbstractTableModel {
     //单元格元素类型
-    private Class[] cellType = { Boolean.class, String.class, String.class};
+    private Class[] cellType = { Boolean.class, String.class, String.class };
     //表头
     private String title[] = { "select", "key", "value" };
     //模拟数据
@@ -22,7 +24,7 @@ public class MyParamsTableModel extends AbstractTableModel {
     }
 
     public List<TableBean> getData() {
-        return data;
+        return data.stream().filter(tableBean -> StringUtils.isNotEmpty(tableBean.getKey()) && StringUtils.isNotEmpty(tableBean.getValue())).collect(Collectors.toList());
     }
 
     public void setData(List<TableBean> data) {
@@ -34,14 +36,13 @@ public class MyParamsTableModel extends AbstractTableModel {
     public void clear() {
         int size = this.data.size();
         this.data.clear();
-        fireTableRowsDeleted(0,size);
+        fireTableRowsDeleted(0, size);
     }
 
     public void addEmptyRow() {
         data.add(new TableBean(true, "", ""));
-        fireTableRowsInserted(data.size()-1,data.size()-1);
+        fireTableRowsInserted(data.size() - 1, data.size() - 1);
     }
-
 
     public void removeRow(int row) {
         if (row > -1 && row < data.size()) {
@@ -72,7 +73,7 @@ public class MyParamsTableModel extends AbstractTableModel {
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        if (rowIndex<data.size()) {
+        if (rowIndex < data.size()) {
             switch (columnIndex) {
                 case 0:
                     return data.get(rowIndex).getSelected();
@@ -96,7 +97,7 @@ public class MyParamsTableModel extends AbstractTableModel {
 
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-        if (rowIndex<data.size()) {
+        if (rowIndex < data.size()) {
             switch (columnIndex) {
                 case 0:
                     data.get(rowIndex).setSelected((Boolean) aValue);
@@ -111,6 +112,4 @@ public class MyParamsTableModel extends AbstractTableModel {
         }
         this.fireTableCellUpdated(rowIndex, columnIndex);
     }
-
-
 }

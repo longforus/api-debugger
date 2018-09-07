@@ -27,7 +27,7 @@ object HttpManage {
         if (url.isEmpty()) {
             return
         }
-        val request = buildRequest(url, UIActionHandler.getParamsMap(mainPanel.tbParams, false), mainPanel.curMethod, mainPanel.curEncryptCode)
+        val request = buildRequest(url, UIActionHandler.getParamsMap(mainPanel.myParamsTableModel, false), mainPanel.curMethod, mainPanel.curEncryptCode)
         doRequest(request)
     }
 

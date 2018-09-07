@@ -14,6 +14,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
@@ -21,6 +22,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.KeyStroke;
+import org.apache.commons.lang3.StringUtils;
 
 public class DefaultParamsDialog extends JDialog {
     private JPanel contentPane;
@@ -106,14 +108,12 @@ public class DefaultParamsDialog extends JDialog {
         //    bean.setId(bean.hashCode());
         //    result.add(bean);
         //}
-        List<TableBean> data = mModel.getData();
-        for (TableBean bean : data) {
-            bean.setId(bean.hashCode());
-        }
-        MyValueHandler.INSTANCE.getCurProject().setDefaultParams(data);
+        List<TableBean> collect = mModel.getData();
+        collect.forEach(tableBean -> tableBean.setId(tableBean.hashCode()));
+        MyValueHandler.INSTANCE.getCurProject().setDefaultParams(collect);
         OB.paramsBox.remove(OB.paramsBox.query().equal(TableBean_.projectId, MyValueHandler.INSTANCE.getCurProject().getId()).build().find());
-        if (data.size() > 0) {
-            OB.paramsBox.put(data);
+        if (collect.size() > 0) {
+            OB.paramsBox.put(collect);
         }
         dispose();
     }

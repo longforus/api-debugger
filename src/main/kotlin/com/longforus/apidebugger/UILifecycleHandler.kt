@@ -68,7 +68,6 @@ object UILifecycleHandler {
         item.addActionListener {
             val projectName = JOptionPane.showInputDialog("Input Project Name")
             if (projectName.isNullOrEmpty()) {
-                JOptionPane.showMessageDialog(mainPanel, "input error")
                 return@addActionListener
             }
             val count = OB.projectBox.query {

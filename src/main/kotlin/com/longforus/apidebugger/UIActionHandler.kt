@@ -1,8 +1,8 @@
 package com.longforus.apidebugger
 
 import com.longforus.apidebugger.bean.ApiBean
+import com.longforus.apidebugger.ui.MyParamsTableModel
 import javax.swing.DefaultComboBoxModel
-import javax.swing.JTable
 
 /**
  * Created by XQ Yang on 8/31/2018  11:21 AM.
@@ -32,7 +32,7 @@ object UIActionHandler {
                 if (!it.apis.contains(apiBean)) {
                     apiBean.encryptType = mainPanel.selectedEncryptID
                     apiBean.method = mainPanel.selectedMethodType
-                    apiBean.paramsMap = getParamsMap(mainPanel.tbParams)
+                    apiBean.paramsMap = getParamsMap(mainPanel.myParamsTableModel)
                     it.apis.add(0, apiBean)
                     val model = mainPanel.cbApiUrl.model as DefaultComboBoxModel
                     model.insertElementAt(apiBean, 0)
@@ -43,20 +43,17 @@ object UIActionHandler {
                 apiBean = selectedItem as ApiBean
                 apiBean.encryptType = mainPanel.selectedEncryptID
                 apiBean.method = mainPanel.selectedMethodType
-                apiBean.paramsMap = getParamsMap(mainPanel.tbParams)
+                apiBean.paramsMap = getParamsMap(mainPanel.myParamsTableModel)
             }
             OB.apiBox.put(apiBean)
         }
     }
 
-    fun getParamsMap(jTable: JTable, isSave: Boolean = true): MutableMap<String, String> {
+    fun getParamsMap(model: MyParamsTableModel, isSave: Boolean = true): MutableMap<String, String> {
         val map = HashMap<String, String>()
-        for (i in 0..jTable.rowCount) {
-            if (jTable.getValueAt(i, 1) == null) {
-                break
-            }
-            if (jTable.getValueAt(i, 0) as Boolean || isSave) {
-                map[jTable.getValueAt(i, 1) as String] = jTable.getValueAt(i, 2) as String
+        for (bean in model.data) {
+            if (bean.selected || isSave) {
+                    map[bean.key] = bean.value
             }
         }
         return map
