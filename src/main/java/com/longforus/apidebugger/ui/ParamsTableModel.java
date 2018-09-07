@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 import javax.swing.table.AbstractTableModel;
 import org.apache.commons.lang3.StringUtils;
 
-public class MyParamsTableModel extends AbstractTableModel {
+public class ParamsTableModel extends AbstractTableModel {
     //单元格元素类型
     private Class[] cellType = { Boolean.class, String.class, String.class };
     //表头
@@ -20,7 +20,7 @@ public class MyParamsTableModel extends AbstractTableModel {
 
     private List<TableBean> data = new ArrayList<>();
 
-    public MyParamsTableModel() {
+    public ParamsTableModel() {
     }
 
     public List<TableBean> getData() {

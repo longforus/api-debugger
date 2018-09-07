@@ -56,7 +56,7 @@ object UILifecycleHandler {
 //                    mainPanel.tbParame.model.setValueAt(entry.key, index, 1)
 //                    mainPanel.tbParame.model.setValueAt(entry.value, index, 2)
 //                }
-                mainPanel.myParamsTableModel.data = ApiBean.getTableValueList(api)
+                mainPanel.paramsTableModel.data = ApiBean.getTableValueList(api)
             }
         }
     }
@@ -120,7 +120,7 @@ object UILifecycleHandler {
         val item1 = JMenuItem("about")
         am.add(item1)
         item1.addActionListener {
-            JOptionPane.showMessageDialog(null,"version 0.9  \nAuthor longforus  \nQQ  89082243 ","About",JOptionPane.INFORMATION_MESSAGE)
+            JOptionPane.showMessageDialog(null,"version 1.0  \nAuthor longforus  \nQQ  89082243 ","About",JOptionPane.INFORMATION_MESSAGE)
         }
         menuBar.add(pm)
         menuBar.add(am)

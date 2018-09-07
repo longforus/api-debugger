@@ -16,34 +16,51 @@ import java.util.concurrent.TimeUnit
 object HttpManage {
 
     lateinit var mainPanel: MainPanel
-    var startTime: Long = 0
     val okHttpClient = OkHttpClient.Builder().writeTimeout(30, TimeUnit.SECONDS)
         .readTimeout(30, TimeUnit.SECONDS)
         .connectTimeout(30, TimeUnit.SECONDS).build()
 
 
-    fun sendRequest() {
-        val url = getAbsoluteUrl(mainPanel.curApiUrl)
-        if (url.isEmpty()) {
-            return
+    fun sendTestRequest(request: Request? = getRequest(), isLast: Boolean = false, allCount: Int = 0,startTime:Long = 0) {
+        request?.let {
+            if (!isLast) {
+                okHttpClient.newCall(request).enqueue(object : Callback {
+                    override fun onFailure(call: Call, e: IOException) {
+                    }
+
+                    override fun onResponse(call: Call, response: Response) {
+                        synchronized(this@HttpManage) {
+                            com.longforus.apidebugger.mainPanel.pb.value += 1
+                        }
+                    }
+                })
+            } else {
+                doRequest(request,startTime,allCount)
+            }
         }
-        val request = buildRequest(url, UIActionHandler.getParamsMap(mainPanel.myParamsTableModel, false), mainPanel.curMethod, mainPanel.curEncryptCode)
-        doRequest(request)
+    }
+
+    fun sendRequest(request: Request? = getRequest()) {
+        request?.let {
+            doRequest(request)
+        }
     }
 
 
-    private fun doRequest(request: Request) {
+    fun getRequest(): Request? {
+        val url = getAbsoluteUrl(mainPanel.curApiUrl)
+        if (url.isEmpty()) {
+            return null
+        }
+        return buildRequest(url, UIActionHandler.getParamsMap(mainPanel.paramsTableModel, false), mainPanel.curMethod, mainPanel.curEncryptCode)
+    }
 
-        startTime = System.currentTimeMillis()
+
+    private fun doRequest(request: Request, startTime: Long = System.currentTimeMillis(), allCount: Int = 0) {
         okHttpClient.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                mainPanel.lbStatus.text = "onFailure message : ${e.message} "
-//                val byteArrayOutputStream = ByteArrayOutputStream()
-//                val ps = PrintStream(byteArrayOutputStream)
-//                e.printStackTrace(ps)
-
-                mainPanel.tpInfo.append("consuming: ${System.currentTimeMillis() - startTime}ms \n ", Color.BLUE)
-
+                mainPanel.lbStatus.text = "onFailure message : ${e.message}\n"
+                mainPanel.tpInfo.append("consuming: ${System.currentTimeMillis() - startTime}ms \n", Color.BLUE)
             }
 
             @Throws(IOException::class)
@@ -64,6 +81,11 @@ object HttpManage {
                     mainPanel.tpInfo.append("\non response but not success\n", Color.RED)
                     mainPanel.tpInfo.append("code = ${response.code()} \n ", Color.RED)
                     mainPanel.tpInfo.append("message = ${response.message()}  \n", Color.RED)
+                }
+                if (allCount!=0) {
+                    mainPanel.tpInfo.append("\nAll test count: $allCount  \n", Color.GREEN)
+                    mainPanel.tpInfo.append("\nSuccess test count: ${mainPanel.pb.value}  \n", Color.GREEN)
+                    mainPanel.tpInfo.append("\nThe total time consuming: ${System.currentTimeMillis() - startTime}ms  \n", Color.GREEN)
                 }
             }
         })

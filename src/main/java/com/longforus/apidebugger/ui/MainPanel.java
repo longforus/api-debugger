@@ -24,6 +24,7 @@ import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.ItemEvent;
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -42,6 +43,7 @@ import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -61,7 +63,7 @@ import javax.swing.text.html.ParagraphView;
  */
 
 public class MainPanel extends JFrame {
-    private MyParamsTableModel mMyParamsTableModel;
+    private ParamsTableModel mParamsTableModel;
     private JComboBox mCbBaseUrl;
     private JButton mBtnSaveBaseUrl;
     private JComboBox mCbApiUrl;
@@ -80,8 +82,17 @@ public class MainPanel extends JFrame {
     private BrowserView mBrowserView;
     private JButton mbtnDp;
     private JTextField tvTestCount;
-    private JButton mStartButton;
+    private JButton mBtnStartTest;
+    private JProgressBar mPb;
     private Browser mBrowser;
+
+    public JProgressBar getPb() {
+        return mPb;
+    }
+
+    public JTextField getTvTestCount() {
+        return tvTestCount;
+    }
 
     public JComboBox getCbMethod() {
         return mCbMethod;
@@ -91,8 +102,8 @@ public class MainPanel extends JFrame {
         return mTbParams;
     }
 
-    public MyParamsTableModel getMyParamsTableModel() {
-        return mMyParamsTableModel;
+    public ParamsTableModel getParamsTableModel() {
+        return mParamsTableModel;
     }
 
     public JComboBox getCbEncrypt() {
@@ -139,6 +150,16 @@ public class MainPanel extends JFrame {
             e.printStackTrace();
         }
         mCbMethod.setModel(new DefaultComboBoxModel(new String[] { "POST", "GET" }));
+        //限制只能输入数字
+        tvTestCount.addKeyListener(new KeyAdapter() {
+            public void keyTyped(KeyEvent e) {
+                int keyChar = e.getKeyChar();
+                if (keyChar < KeyEvent.VK_0 || keyChar > KeyEvent.VK_9) {
+                    e.consume(); //关键，屏蔽掉非法输入
+                }
+            }
+        });
+
         setContentPane(baseP);
         setJMenuBar(UILifecycleHandler.INSTANCE.getMenuBar());
         initEvent();
@@ -152,9 +173,7 @@ public class MainPanel extends JFrame {
         int y = 0;
         setLocation(x, y);
         setVisible(true);
-
         browserInit();
-
         //Observable.create((ObservableOnSubscribe<String>) emitter -> emitter.onNext("{}")).delay(10, TimeUnit.MILLISECONDS).subscribe(
         //    s -> mBrowser.executeJavaScript("app.doc" + "._id || (document.location.href = document.location.pathname + \"#/new\", location.reload())"));
 
@@ -229,6 +248,7 @@ public class MainPanel extends JFrame {
         mCbMethod.addItemListener(e -> UIActionHandler.INSTANCE.onMethodChanged(mCbMethod.getSelectedIndex()));
         mCbEncrypt.addItemListener(e -> UIActionHandler.INSTANCE.onEncryptTypeChanged(((IEncryptHandler) e.getItem()).getTypeCode()));
         mbtnDp.addActionListener(e -> showDefaultParamsDialog());
+        mBtnStartTest.addActionListener(e -> UIActionHandler.INSTANCE.onStartTest());
     }
 
     private void showDefaultParamsDialog() {
@@ -307,11 +327,11 @@ public class MainPanel extends JFrame {
     }
 
     public void resetParamsTbModel() {
-        mMyParamsTableModel = MainPanel.resetParamsTbModel(mTbParams);
+        mParamsTableModel = MainPanel.resetParamsTbModel(mTbParams);
     }
 
-    public static MyParamsTableModel resetParamsTbModel(JTable table) {
-        MyParamsTableModel model = new MyParamsTableModel();
+    public static ParamsTableModel resetParamsTbModel(JTable table) {
+        ParamsTableModel model = new ParamsTableModel();
         table.setModel(model);
         table.getColumnModel().getColumn(0).setPreferredWidth(50);
         table.getColumnModel().getColumn(1).setPreferredWidth(120);
@@ -320,7 +340,7 @@ public class MainPanel extends JFrame {
     }
 
     private void initTable() {
-        mMyParamsTableModel = resetParamsTbModel(mTbParams);
+        mParamsTableModel = resetParamsTbModel(mTbParams);
         mTbParams.addKeyListener(new KeyListener() {
             @Override
             public void keyTyped(KeyEvent e) {
@@ -335,18 +355,18 @@ public class MainPanel extends JFrame {
             @Override
             public void keyReleased(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_DELETE) {
-                    mMyParamsTableModel.removeRow(mTbParams.getSelectedRow());
+                    mParamsTableModel.removeRow(mTbParams.getSelectedRow());
                 }
             }
         });
         btnAddRow.addActionListener(e -> {
-            mMyParamsTableModel.addEmptyRow();
+            mParamsTableModel.addEmptyRow();
             mTbParams.requestFocus();
-            int index = mMyParamsTableModel.getRowCount() - 1;
+            int index = mParamsTableModel.getRowCount() - 1;
             mTbParams.setRowSelectionInterval(index, index);//最后一行获得焦点
             mTbParams.editCellAt(index, 1);
         });
-        btnDelRow.addActionListener(e -> mMyParamsTableModel.removeRow(mTbParams.getSelectedRow()));
+        btnDelRow.addActionListener(e -> mParamsTableModel.removeRow(mTbParams.getSelectedRow()));
         btnClear.addActionListener(e -> UIActionHandler.INSTANCE.onClearParams());
     }
 
@@ -471,7 +491,7 @@ public class MainPanel extends JFrame {
         baseP.add(panel2, cc.xyw(1, 5, 3));
         final JLabel label3 = new JLabel();
         label3.setForeground(new Color(-1));
-        label3.setText("Concurrent test");
+        label3.setText("Pressure test");
         panel2.add(label3, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST,
             com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED,
             com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
@@ -480,9 +500,9 @@ public class MainPanel extends JFrame {
         panel2.add(tvTestCount, new com.intellij.uiDesigner.core.GridConstraints(0, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST,
             com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW,
             com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
-        mStartButton = new JButton();
-        mStartButton.setText("Start");
-        panel2.add(mStartButton, new com.intellij.uiDesigner.core.GridConstraints(0, 2, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER,
+        mBtnStartTest = new JButton();
+        mBtnStartTest.setText("Start");
+        panel2.add(mBtnStartTest, new com.intellij.uiDesigner.core.GridConstraints(0, 2, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER,
             com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL,
             com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW,
             com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
@@ -494,6 +514,10 @@ public class MainPanel extends JFrame {
         mbtnDp.setText(" Default Parameter");
         mbtnDp.setToolTipText(" Set Current Project Default Parameter");
         baseP.add(mbtnDp, cc.xyw(7, 5, 3));
+        mPb = new JProgressBar();
+        mPb.setMaximumSize(new Dimension(50, 10));
+        mPb.setPreferredSize(new Dimension(50, 10));
+        baseP.add(mPb, cc.xy(13, 10, CellConstraints.FILL, CellConstraints.DEFAULT));
     }
 
     /** @noinspection ALL */

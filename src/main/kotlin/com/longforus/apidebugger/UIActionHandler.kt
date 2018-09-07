@@ -1,7 +1,7 @@
 package com.longforus.apidebugger
 
 import com.longforus.apidebugger.bean.ApiBean
-import com.longforus.apidebugger.ui.MyParamsTableModel
+import com.longforus.apidebugger.ui.ParamsTableModel
 import javax.swing.DefaultComboBoxModel
 
 /**
@@ -32,7 +32,7 @@ object UIActionHandler {
                 if (!it.apis.contains(apiBean)) {
                     apiBean.encryptType = mainPanel.selectedEncryptID
                     apiBean.method = mainPanel.selectedMethodType
-                    apiBean.paramsMap = getParamsMap(mainPanel.myParamsTableModel)
+                    apiBean.paramsMap = getParamsMap(mainPanel.paramsTableModel)
                     it.apis.add(0, apiBean)
                     val model = mainPanel.cbApiUrl.model as DefaultComboBoxModel
                     model.insertElementAt(apiBean, 0)
@@ -43,13 +43,13 @@ object UIActionHandler {
                 apiBean = selectedItem as ApiBean
                 apiBean.encryptType = mainPanel.selectedEncryptID
                 apiBean.method = mainPanel.selectedMethodType
-                apiBean.paramsMap = getParamsMap(mainPanel.myParamsTableModel)
+                apiBean.paramsMap = getParamsMap(mainPanel.paramsTableModel)
             }
             OB.apiBox.put(apiBean)
         }
     }
 
-    fun getParamsMap(model: MyParamsTableModel, isSave: Boolean = true): MutableMap<String, String> {
+    fun getParamsMap(model: ParamsTableModel, isSave: Boolean = true): MutableMap<String, String> {
         val map = HashMap<String, String>()
         for (bean in model.data) {
             if (bean.selected || isSave) {
@@ -114,9 +114,36 @@ object UIActionHandler {
 
     fun onClearParams() {
         MyValueHandler.curApi?.paramsMap?.clear()
-        mainPanel.myParamsTableModel.clear()
+        mainPanel.paramsTableModel.clear()
         if (MyValueHandler.curApi != null) {
             OB.apiBox.put(MyValueHandler.curApi)
+        }
+    }
+
+    fun onStartTest() {
+        val str = mainPanel.tvTestCount.text
+        if (str.isNullOrEmpty()) {
+            showErrorMsg("Test times cannot be empty")
+            return
+        }
+        val count = str.toInt()
+        if (count > 0) {
+            mainPanel.pb.minimum = 0
+            mainPanel.pb.value = 0
+            mainPanel.pb.maximum = count
+            mainPanel.lbStatus.text = "Stress testing..."
+            val startTime = System.currentTimeMillis()
+            val request = HttpManage.getRequest()
+            request?.let {
+                for (i in 0..count) {
+                    if (i == count) {
+                        HttpManage.sendTestRequest(it,true,count,startTime)
+                    } else {
+                        HttpManage.sendTestRequest(it,false)
+                    }
+                }
+            }
+
         }
     }
 }

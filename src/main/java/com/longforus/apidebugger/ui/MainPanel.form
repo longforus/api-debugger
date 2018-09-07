@@ -208,7 +208,7 @@
             </constraints>
             <properties>
               <foreground color="-1"/>
-              <text value="Concurrent test"/>
+              <text value="Pressure test"/>
             </properties>
           </component>
           <component id="8ef11" class="javax.swing.JTextField" binding="tvTestCount">
@@ -221,7 +221,7 @@
               <toolTipText value="test count"/>
             </properties>
           </component>
-          <component id="67965" class="javax.swing.JButton" binding="mStartButton" default-binding="true">
+          <component id="67965" class="javax.swing.JButton" binding="mBtnStartTest">
             <constraints>
               <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
@@ -254,6 +254,16 @@
         <properties>
           <text value=" Default Parameter"/>
           <toolTipText value=" Set Current Project Default Parameter"/>
+        </properties>
+      </component>
+      <component id="6bdcc" class="javax.swing.JProgressBar" binding="mPb">
+        <constraints>
+          <grid row="9" column="12" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <forms defaultalign-horz="false"/>
+        </constraints>
+        <properties>
+          <maximumSize width="50" height="10"/>
+          <preferredSize width="50" height="10"/>
         </properties>
       </component>
     </children>

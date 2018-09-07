@@ -14,7 +14,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
@@ -22,7 +21,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.KeyStroke;
-import org.apache.commons.lang3.StringUtils;
 
 public class DefaultParamsDialog extends JDialog {
     private JPanel contentPane;
@@ -32,7 +30,7 @@ public class DefaultParamsDialog extends JDialog {
     private JButton mAddRowButton;
     private JButton mDeleteRowButton;
     private JButton mClearButton;
-    private MyParamsTableModel mModel;
+    private ParamsTableModel mModel;
 
     public DefaultParamsDialog() {
         setContentPane(contentPane);
