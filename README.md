@@ -50,7 +50,7 @@ A like Postman API debugger that supports custom encryption.
 
 ## 自定义加密扩展
 
-该App界面使用Java实现,逻辑使用Kotlin实现.内部数据库为[ObjectBox](https://objectbox.io/),需要达到自定义加密的目的的话.需要自行扩展.
+该App界面使用Java实现,逻辑使用Kotlin实现.内部数据库为[ObjectBox](https://objectbox.io/),网络请求使用Okhttp3.需要达到自定义加密的目的的话.需要自行扩展.
 
 1. **[重点]**fork仓库clone到本地后,使用IDEA打开.下载 jxbrowser-对应平台-6.20.jar (链接：https://pan.baidu.com/s/1B3ErPhbrocIaGhu3zg8RMA 密码：1wn9 )  拷贝到lib中(太大了不好传).
 
