@@ -21,7 +21,6 @@ A like Postman API debugger that supports custom encryption.
 
 -   JDK下载地址:https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
 -   如果在Windows系统下无法正常使用的话.需要安装 [Microsoft Visual C++ 2015 Redistributable (x64)](http://www.microsoft.com/en-us/download/details.aspx?id=53587)
--   默认支持mac和windows
 
 ## 使用
 
@@ -53,11 +52,11 @@ A like Postman API debugger that supports custom encryption.
 
 该App界面使用Java实现,逻辑使用Kotlin实现.内部数据库为[ObjectBox](https://objectbox.io/),需要达到自定义加密的目的的话.需要自行扩展.
 
-1.  **[重点]**fork仓库clone到本地后,使用IDEA打开.下载 jxbrowser-mac-6.20.jar (链接：https://pan.baidu.com/s/1B3ErPhbrocIaGhu3zg8RMA 密码：1wn9 )  拷贝到lib中(太大了不好传,虽然名字里有mac但是windows和mac都支持,linux尚未测试,如有linux使用需求,请自行查找linux版).
+1. **[重点]**fork仓库clone到本地后,使用IDEA打开.下载 jxbrowser-对应平台-6.20.jar (链接：https://pan.baidu.com/s/1B3ErPhbrocIaGhu3zg8RMA 密码：1wn9 )  拷贝到lib中(太大了不好传).
 
-2.  在build生成out文件夹后,解压jsonView.rar到`\out\production\classes\com\longforus\apidebugger\ui`目录下(这样生成jar包的时候才会把这些文件包含到jar包中,gradle应该有别的更优雅的方法,目前尚未实现).
+2. 在build生成out文件夹后,解压jsonView.zip到`\out\production\classes\com\longforus\apidebugger\ui`目录下(这样生成jar包的时候才会把这些文件包含到jar包中,gradle应该有别的更优雅的方法,目前尚未实现).
 
-3.  实现`com.longforus.apidebugger.encrypt.IEncryptHandler`抽象类.可参考默认实现类`com.longforus.apidebugger.encrypt.DefaultEncryptHandler`
+3. 实现`com.longforus.apidebugger.encrypt.IEncryptHandler`抽象类.可参考默认实现类`com.longforus.apidebugger.encrypt.DefaultEncryptHandler`
 
     ```kotlin
     /**
@@ -79,7 +78,7 @@ A like Postman API debugger that supports custom encryption.
     }
     ```
 
-4.  新建一个实现类的实例添加到`com.longforus.apidebugger.MyValueHandler#getEncryptImplList`中.第0个为默认显示item.现在就可以在加密方式中选择你自己的加密方式了.
+4. 新建一个实现类的实例添加到`com.longforus.apidebugger.MyValueHandler#getEncryptImplList`中.第0个为默认显示item.现在就可以在加密方式中选择你自己的加密方式了.
 
     ```kotlin
     
@@ -88,5 +87,12 @@ A like Postman API debugger that supports custom encryption.
        }
     ```
 
-5.  打包可运行的jar包请自行搜索.
+5. 打包可运行的jar包:
 
+    ![4](/img/4.png)
+
+![5](/img/5.png)
+
+![6](/img/6.png)
+
+![7](/img/7.png)

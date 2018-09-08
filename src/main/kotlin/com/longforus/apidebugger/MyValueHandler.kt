@@ -5,7 +5,6 @@ import com.longforus.apidebugger.bean.ApiBean
 import com.longforus.apidebugger.bean.ProjectBean
 import com.longforus.apidebugger.encrypt.DefaultEncryptHandler
 import com.longforus.apidebugger.encrypt.IEncryptHandler
-import com.longforus.apidebugger.encrypt.kzEncryptHandler
 import java.awt.Toolkit
 import java.awt.datatransfer.StringSelection
 
@@ -18,7 +17,7 @@ import java.awt.datatransfer.StringSelection
 object MyValueHandler {
 
 
-    val encryptImplList = listOf<IEncryptHandler>(kzEncryptHandler(), DefaultEncryptHandler())
+    val encryptImplList = listOf<IEncryptHandler>( DefaultEncryptHandler())
 //    val encryptImplList = listOf<IEncryptHandler>( DefaultEncryptHandler())
     val mGson =GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create()
 
