@@ -60,7 +60,8 @@ object HttpManage {
         okHttpClient.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 mainPanel.lbStatus.text = "onFailure message : ${e.message}\n"
-                mainPanel.tpInfo.append("consuming: ${System.currentTimeMillis() - startTime}ms \n", Color.BLUE)
+                mainPanel.tpInfo.append( "\nonFailure \n message : ${e.message}\n", Color.RED)
+                mainPanel.tpInfo.append(" consuming: ${System.currentTimeMillis() - startTime}ms \n", Color.RED)
             }
 
             @Throws(IOException::class)

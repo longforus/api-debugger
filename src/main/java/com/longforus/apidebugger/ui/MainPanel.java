@@ -30,6 +30,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.io.DataInputStream;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import javax.swing.BorderFactory;
@@ -417,8 +418,8 @@ public class MainPanel extends JFrame {
         baseP.setLayout(new FormLayout(
             "fill:d:noGrow,left:4dlu:noGrow,fill:300px:noGrow,left:4dlu:noGrow,fill:d:noGrow,left:4dlu:noGrow,fill:max(d;4px):noGrow,left:4dlu:noGrow,fill:d:noGrow," +
                 "left:4dlu:noGrow,fill:d:noGrow,left:4dlu:noGrow,fill:600px:grow",
-            "center:d:noGrow,center:max(d;4px):noGrow,top:4dlu:noGrow,center:33px:noGrow,center:33px:noGrow,center:200px:noGrow,center:40px:noGrow,top:4dlu:noGrow,center:max(p;" +
-                "600px):grow,center:max(d;4px):noGrow"));
+            "center:d:noGrow,center:max(d;4px):noGrow,top:4dlu:noGrow,center:33px:noGrow,center:33px:noGrow,center:200px:noGrow,center:40px:noGrow,top:4dlu:noGrow,center:p:grow," +
+                "center:max(d;4px):noGrow"));
         baseP.setName("Api debugger");
         baseP.setPreferredSize(new Dimension(1341, 980));
         baseP.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1), null));
