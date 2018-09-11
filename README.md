@@ -91,8 +91,17 @@ A like Postman API debugger that supports custom encryption.
 
     ![4](/img/4.png)
 
-![5](/img/5.png)
+    ![5](/img/5.png)
 
-![6](/img/6.png)
+    ![6](/img/6.png)
 
-![7](/img/7.png)
+    ![7](/img/7.png)
+
+6.  添加splash闪屏图片:
+
+   拷贝splash.png到`\out\production\classes`目录下,在上一步生成的清单文件中添加最后一行.
+   ```
+   Manifest-Version: 1.0
+   Main-Class: com.longforus.apidebugger.MainKt
+   SplashScreen-Image: splash.png
+   ```

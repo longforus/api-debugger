@@ -7,6 +7,8 @@ import java.lang.reflect.Field
 import java.lang.reflect.Modifier
 import java.math.BigInteger
 
+
+
 /**
  * Created by XQ Yang on 8/30/2018  10:07 AM.
  * Description :
@@ -20,7 +22,6 @@ fun main(args: Array<String>) {
     jxInit()
     OB.init()
     EventQueue.invokeLater {
-//        Notepad()
         mainPanel = MainPanel(appName)
         UILifecycleHandler.onResume(mainPanel)
         HttpManage.mainPanel = mainPanel
